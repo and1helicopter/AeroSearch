@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using webREST.Models;
+using Microsoft.OpenApi.Models;
 
 namespace webREST
 {
@@ -37,6 +38,11 @@ namespace webREST
                     option.Configuration = "127.0.0.1";
                     option.InstanceName = "master";
                 });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AeroSearch API", Version = "v1" });
+            });
         }
 
 
@@ -51,6 +57,14 @@ namespace webREST
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -61,8 +75,6 @@ namespace webREST
             {
                 endpoints.MapControllers();
             });
-
-            
         }
 
         //TODO
