@@ -1,5 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace AeroSearchREST.JSON
 {
@@ -19,7 +24,7 @@ namespace AeroSearchREST.JSON
     {
         [JsonProperty("terms", Required = Required.Default)]
         public SearchAeroRS_Proposal_Terms Terms;
-        
+
         [JsonProperty("validating_carrier", Required = Required.Default)]
         public string ValidatingCarrier;
 
@@ -29,8 +34,53 @@ namespace AeroSearchREST.JSON
 
     public class SearchAeroRS_Proposal_Terms
     {
-        [JsonProperty("16", Required = Required.Default)]
-        public SearchAeroRS_Proposal_Terms_Price Price;
+      //  [JsonConverter(typeof(SearchAeroRS_Proposal_Terms_Price_Converter))]
+        [JsonExtensionData]
+        public Dictionary<string, JToken> variables;
+    }
+
+    public class SearchAeroRS_Proposal_Terms_Price_Converter : JsonConverter
+    {
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
+            JsonSerializer serializer)
+        {
+            IDictionary<string, SearchAeroRS_Proposal_Terms_Price> result;
+
+            if (reader.TokenType == JsonToken.StartArray)
+            {
+                JArray legacyArray = (JArray)JArray.ReadFrom(reader);
+
+                result = legacyArray.ToDictionary(
+                    el => el["Key"].ToString(),
+                    el => JsonConvert.DeserializeObject<SearchAeroRS_Proposal_Terms_Price>(el["Value"].ToString()));
+            }
+            else
+            {
+                result = (IDictionary<string, SearchAeroRS_Proposal_Terms_Price>)
+                        serializer.Deserialize(reader, typeof(IDictionary<string, SearchAeroRS_Proposal_Terms_Price>));
+            }
+
+            return result;
+        }
+
+        public override void WriteJson(
+            JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(IDictionary<string, SearchAeroRS_Proposal_Terms_Price>).IsAssignableFrom(objectType);
+        }
+
+        public override bool CanWrite
+        {
+            get { return false; }
+        }
     }
 
     public class SearchAeroRS_Proposal_Terms_Price

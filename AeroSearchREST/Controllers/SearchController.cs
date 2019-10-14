@@ -9,6 +9,9 @@ using Newtonsoft.Json;
 using RestSharp;
 using AeroSearchREST.Models;
 using AeroSearchREST.JSON;
+using Newtonsoft.Json.Serialization;
+using AeroSearchREST.Extentions;
+using AeroSearchREST.Models.Data;
 
 namespace AeroSearchREST.Controllers
 {
@@ -50,7 +53,7 @@ namespace AeroSearchREST.Controllers
             var client2 = new RestClient($"https://www.aviasales.com/searches_results_united?uuid={search_id}");
             var request2 = new RestRequest(Method.GET);
 
-            var list = new List<SearchAeroRS>();
+            var list = new List<SearchAero>();
 
             for (int i = 0; i < 10; i++)
             {
@@ -60,13 +63,35 @@ namespace AeroSearchREST.Controllers
 
                 foreach (var item in listTemp)
                 {
-                    if (item != null) list.Add(item);
+                    if (!item.Proposals.IsNullOrEmpty())
+                    {
+                        foreach (var offer in item.Proposals)
+                        {
+
+                            var offerTemp = offer.Terms.variables.FirstOrDefault().Value;
+
+                            var price = offerTemp["price"].ToString();
+                            var currency = offerTemp["currency"].ToString();
+
+                            var offerXXX = new SearchAero()
+                            {
+                             //   Price = price
+
+                            };
+
+                            list.Add(offerXXX);
+
+
+                        }
+                    }
+
+
                 }
             }
-
-
-
-            return new JsonResult(list);
+            var answer = new ContentResult();
+            answer.Content = JsonConvert.SerializeObject(list);
+            
+            return answer;
         }
 
         [HttpGet("tests")]
