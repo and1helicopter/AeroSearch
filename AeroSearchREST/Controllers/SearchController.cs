@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using RestSharp;
 using AeroSearchREST.Models;
 using AeroSearchREST.JSON;
+using Microsoft.Extensions.Caching.Distributed;
+using StackExchange.Redis;
 
 namespace AeroSearchREST.Controllers
 {
@@ -16,11 +18,13 @@ namespace AeroSearchREST.Controllers
     [Route("api/[controller]")]
     public class SearchController : ControllerBase
     {
-        private readonly WebAppContext _context;
+        private readonly AeroSearchContext _context;
+        private readonly IServiceRedisCache _memoryCache;
 
-        public SearchController(WebAppContext context)
+        public SearchController(AeroSearchContext context, IServiceRedisCache memoryCache)
         {
             _context = context;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -72,14 +76,20 @@ namespace AeroSearchREST.Controllers
         [HttpGet("tests")]
         public async Task<ActionResult> Tests([FromQuery]SearchParam searchParam)
         {
-            var cities = await _context.City.ToListAsync();
+            var city = _context.City.FirstOrDefault(_city => _city.Code == searchParam.segments[0].origin);
 
-            var origin = cities.FirstOrDefault(_city => _city.Code == searchParam.segments[0].origin);
+            var airports = await _context.Airport.Where(_airport => _airport.CityCode == city.Code).ToListAsync();
 
-            var geo = new GeoCoordinate(origin.Latitude, origin.Longitude);                       
+            foreach (var airport in airports)
+            {
+                var temp = _memoryCache.Cache.GeoRadius(airport.Code, airport.Longitude, airport.Latitude, 350, GeoUnit.Kilometers).ToList();
 
-            var list = cities.Where(_city => IsInsideRadius(geo, new GeoCoordinate(_city.Latitude, _city.Longitude), 350 * 1000)).ToList();
-            return new JsonResult(list);
+            }
+
+            //var geo = new GeoCoordinate(origin.Latitude, origin.Longitude);
+
+            //var list = cities.Where(_city => IsInsideRadius(geo, new GeoCoordinate(_city.Latitude, _city.Longitude), 350 * 1000)).ToList();
+            return new JsonResult("");
         }
 
         private class SearchResponse

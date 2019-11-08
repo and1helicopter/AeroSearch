@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using AeroSearchREST.Models;
 using Microsoft.OpenApi.Models;
@@ -30,20 +23,21 @@ namespace AeroSearchREST
         {
             services.AddControllers();
 
-            services.AddDbContext<WebAppContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("CountryContext")));
+            services.AddDbContext<AeroSearchContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
 
-            services.AddDistributedRedisCache(option =>
-                {
-                    option.Configuration = "127.0.0.1";
-                    option.InstanceName = "master";
-                });
+            services.AddSingleton<IServiceRedisCache>(new ServiceRedisCache(Configuration.GetConnectionString("RedisHost")));
+
+            //services.AddDistributedRedisCache(option =>
+            //    {
+            //        option.Configuration = Configuration.GetConnectionString("RedisHost");
+            //        option.InstanceName = Configuration.GetConnectionString("RedisInstance");                           
+            //    });
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AeroSearch API", Version = "v1" });
             });
-
         }
 
 
@@ -53,6 +47,7 @@ namespace AeroSearchREST
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -75,11 +70,10 @@ namespace AeroSearchREST
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
+            });            
         }
 
-        //TODO
-        private void InitalizeCache()
+        public void Initialize()
         {
 
         }

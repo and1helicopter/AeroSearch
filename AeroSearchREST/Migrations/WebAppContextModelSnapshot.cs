@@ -7,7 +7,7 @@ using AeroSearchREST.Models;
 
 namespace AeroSearchREST.Migrations
 {
-    [DbContext(typeof(WebAppContext))]
+    [DbContext(typeof(AeroSearchContext))]
     partial class WebAppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

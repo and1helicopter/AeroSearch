@@ -12,9 +12,9 @@ namespace AeroSearchREST.Controllers
     [Route("api/[controller]")]
     public class CountriesController : ControllerBase
     {
-        private readonly WebAppContext _context;
+        private readonly AeroSearchContext _context;
 
-        public CountriesController(WebAppContext context)
+        public CountriesController(AeroSearchContext context)
         {
             _context = context;
         }

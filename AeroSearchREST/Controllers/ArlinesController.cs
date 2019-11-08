@@ -15,9 +15,9 @@ namespace AeroSearchREST.Controllers
     [ApiController]
     public class ArlinesController : ControllerBase
     {
-        private readonly WebAppContext _context;
+        private readonly AeroSearchContext _context;
 
-        public ArlinesController(WebAppContext context)
+        public ArlinesController(AeroSearchContext context)
         {
             _context = context;
         }

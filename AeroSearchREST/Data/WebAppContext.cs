@@ -3,9 +3,9 @@ using AeroSearchREST.Models;
 
 namespace AeroSearchREST.Models
 {
-    public class WebAppContext : DbContext
+    public class AeroSearchContext : DbContext
     {
-        public WebAppContext (DbContextOptions<WebAppContext> options)
+        public AeroSearchContext (DbContextOptions<AeroSearchContext> options)
             : base(options)
         {
         }
