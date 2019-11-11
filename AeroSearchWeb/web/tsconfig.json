@@ -10,7 +10,10 @@
         "moduleResolution": "node",
         "lib": ["es6", "dom"],
         "noImplicitThis": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ]
     },
     "exclude": [
         "node_modules"
