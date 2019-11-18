@@ -8,25 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SimpleSearch from './SimpleSearch';
 
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <Typography component="div" role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
-        <Box p={3}>{children}</Box>
-      </Typography>
-    );
-  }
-
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -41,10 +22,32 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       color: theme.palette.text.secondary  
     },
+    swipeView:{
+      "padding-top": "1px",
+      "padding-bottom": "1px",
+      "padding-left": "1px",
+      "padding-right": "1px",
+    }
   }),
 );
 
+interface TabPanelProps {
+    children?: React.ReactNode;
+    dir?: string;
+    index: any;
+    value: any;
+}
 
+function TabPanel(props: TabPanelProps) {
+    const classes = useStyles();
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <Typography component="div" role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
+        <Box className={classes.swipeView}>{children}</Box>
+      </Typography>
+    );
+}
 
 export default function ContentLayout() {
   const classes = useStyles();

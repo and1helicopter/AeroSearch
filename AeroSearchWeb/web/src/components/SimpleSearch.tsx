@@ -4,12 +4,13 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import CityComponent from './CityComponent';
 import DateComponent from './DateComponent';
+import Grid, { GridSpacing } from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3, 2),
-      alignContent: "horizontal"
+      alignContent: "horizontal",
     },
   }),
 );
@@ -18,11 +19,23 @@ export default function SimpleSearch() {
   const classes = useStyles();
 
   return (
-    <Paper className={classes.root}>
-      <CityComponent></CityComponent>
-      <CityComponent></CityComponent>
-      <DateComponent></DateComponent>
-      <DateComponent></DateComponent>
-    </Paper>
+    <Grid container className={classes.root} spacing={0}>
+      <Grid item xs={12}>
+        <Grid container justify="center" spacing={2}>
+          <Grid item>
+            <CityComponent></CityComponent>
+          </Grid>
+          <Grid item>
+            <CityComponent></CityComponent>
+          </Grid>          
+          <Grid item>
+            <DateComponent></DateComponent>
+          </Grid>          
+          <Grid item>
+            <DateComponent></DateComponent>
+          </Grid>
+        </Grid>
+      </Grid>      
+    </Grid>
   );
 }

@@ -45,7 +45,7 @@ const developmentConfig  = {
         stats: 'errors-only',
         contentBase: './build/',
         compress: true,
-        port: 9000,
+        port: 9001,
         watchContentBase: true,
         progress: true,
         hot: true,

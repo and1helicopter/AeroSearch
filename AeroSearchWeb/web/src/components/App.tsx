@@ -10,7 +10,7 @@ const styles = {
     root: {
         height: "500px",
         background: "#cfd8dc"
-    }
+    }, 
 };
 
 const mapStateToProps = (store: any) => ({app: store.app})
@@ -20,7 +20,7 @@ class App extends React.Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <div>
+                    <div >
                         <Route component={MainLayout}></Route>
                         <Route component={ContentLayout}></Route>
                     </div>
