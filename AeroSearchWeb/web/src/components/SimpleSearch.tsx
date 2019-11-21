@@ -21,18 +21,18 @@ export default function SimpleSearch() {
   return (
     <Grid container className={classes.root} spacing={0}>
       <Grid item xs={12}>
-        <Grid container justify="center" spacing={2}>
+        <Grid container justify="center" spacing={0} >
           <Grid item>
-            <CityComponent></CityComponent>
+            <CityComponent name="Откуда" lang="ru"></CityComponent>
           </Grid>
           <Grid item>
-            <CityComponent></CityComponent>
+            <CityComponent name="Куда" lang="ru"></CityComponent>
           </Grid>          
           <Grid item>
-            <DateComponent></DateComponent>
+            <DateComponent name="Вылет"></DateComponent>
           </Grid>          
           <Grid item>
-            <DateComponent></DateComponent>
+            <DateComponent  name="Обратно"></DateComponent>
           </Grid>
         </Grid>
       </Grid>      

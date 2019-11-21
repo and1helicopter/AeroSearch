@@ -31,27 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    dir?: string;
-    index: any;
-    value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const classes = useStyles();
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <Typography component="div" role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
-        <Box className={classes.swipeView}>{children}</Box>
-      </Typography>
-    );
-}
-
 export default function ContentLayout() {
   const classes = useStyles();
-  const [value, setValue] = React.useState(2);
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
@@ -65,10 +47,10 @@ export default function ContentLayout() {
     <div className={classes.root}>
          <div className={classes.paper}>
              <AppBar position="static" color="default">
-                <Tabs value={value} indicatorColor="primary" textColor="primary" centered onChange={handleChange} aria-label="disabled tabs example">
+                <Tabs variant="fullWidth" value={value} indicatorColor="primary" textColor="primary" centered onChange={handleChange} aria-label="disabled tabs example">
                     <Tab label="Простой поиск" />
-                    <Tab label="Сложный поиск"/>
-                    <Tab label="Составной маршрут"/>
+                    <Tab label="Сложный поиск" />
+                    <Tab label="Составной маршрут" />
                 </Tabs>
             </AppBar>
             <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
@@ -84,5 +66,23 @@ export default function ContentLayout() {
             </SwipeableViews>
          </div>
     </div>
+  );
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: any;
+  value: any;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const classes = useStyles();
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography component="div" role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`}>
+      <Box className={classes.swipeView}>{children}</Box>
+    </Typography>
   );
 }
