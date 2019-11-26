@@ -21,7 +21,7 @@ class App extends React.Component {
             <MuiThemeProvider theme={theme}>
                 <BrowserRouter>
                     <div >
-                        <Route component={MainLayout}></Route>
+                        {/* <Route component={MainLayout}></Route> */}
                         <Route component={ContentLayout}></Route>
                     </div>
                 </BrowserRouter>

@@ -22,6 +22,7 @@ export default function DateComponent(props: DateComponentProps) {
       <Grid container justify="space-around">
         <KeyboardDatePicker
           disableToolbar
+          disablePast
           variant="inline"
           format="dd-MM-yyyy"
           margin="none"

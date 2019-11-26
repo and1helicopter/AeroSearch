@@ -93,15 +93,11 @@ export default class CityComponent extends React.Component<ICityComponentProps, 
         options={this.state.autocompleteData}
         getOptionLabel={(option) => option.name}
         style={{ width: 300 }}
+        noOptionsText="введите текст"        
         renderInput={(params: any) => (
-          <TextField {...params} label={this.props.name} variant="standard" fullWidth onChange = {this.onChange}/>
+          <TextField {...params} label={this.props.name} variant="standard" color="secondary" fullWidth onChange = {this.onChange}/>
         )}
       />
     );
   }
 }
-
-const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 }
-]
