@@ -1,11 +1,17 @@
 import * as React from 'react';
-import TextField from '@material-ui/core/TextField';
+import {TextField, FormControl, FormHelperText } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { makeStyles, createStyles, Theme, withStyles } from '@material-ui/core/styles';
 
-interface FilmOptionType {
-    title: string;
-    year: number;
-}
+const styles = (theme: Theme) =>
+  createStyles({
+    textField: { 
+      color: "#fff"   
+    },
+    "label.MuiFormLabel-root":{
+      color: "#fff"
+    }
+  });
 
 interface ICityComponentProps {
   name: string;
@@ -17,7 +23,7 @@ interface ICityComponentState {
   autocompleteData: any;
 }
 
-export default class CityComponent extends React.Component<ICityComponentProps, ICityComponentState>{
+class CityComponent extends React.Component<ICityComponentProps & any, ICityComponentState> {
   constructor(props: ICityComponentProps)
   {
     super(props);
@@ -26,49 +32,24 @@ export default class CityComponent extends React.Component<ICityComponentProps, 
       value: '',
       autocompleteData: []
     }
-
+    
     this.onChange = this.onChange.bind(this);
     this.retrieveDataAsynchronously = this.retrieveDataAsynchronously.bind(this);
   }
 
   retrieveDataAsynchronously(searchText: string){
-    let _this = this;
-
-    // Url of your website that process the data and returns a
     let url = `http://autocomplete.travelpayouts.com/places2?term=${searchText}&locale=${this.props.lang}`;
-    
-    // Configure a basic AJAX request to your server side API
-    // that returns the data according to the sent text
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
     xhr.onload = () => {
-        let status = xhr.status;
+        if (xhr.status == 200) {
+          this.setState({
+            autocompleteData: xhr.response
+          });
 
-        if (status == 200) {
-            // In this example we expects from the server data with the structure of:
-            // [
-            //    {
-            //        label: "Some Text",
-            //        value: 1,
-            //    },
-            //    {
-            //        label: "Some Other Text",
-            //        value: 1,
-            //    },
-            // ]
-            // But you can obviously change the render data :)
-
-            // Update the state with the remote data and that's it !
-            _this.setState({
-                autocompleteData: xhr.response
-            });
-
-            // Show response of your server in the console
-            console.log(xhr.response);
-        } else {
-            console.error("Cannot load data from remote source");
-        }
+          console.log(this.state.autocompleteData);
+        } 
     };
 
     xhr.send();
@@ -79,25 +60,35 @@ export default class CityComponent extends React.Component<ICityComponentProps, 
         value: e.target.value
     });
 
-    /**
-     * Handle the remote request with the current text !
-     */
     this.retrieveDataAsynchronously(e.target.value);
-
-    console.log("The Input Text has changed to ", e.target.value);
-}
+  }
 
   render(){
     return (
       <Autocomplete
         options={this.state.autocompleteData}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => `${option.code} - ${option.name}` }
         style={{ width: 300 }}
-        noOptionsText="введите текст"        
+        disableOpenOnFocus={true}
         renderInput={(params: any) => (
-          <TextField {...params} label={this.props.name} variant="standard" color="secondary" fullWidth onChange = {this.onChange}/>
+          <FormControl fullWidth style={{width: "100%"}}>
+            <TextField
+              {...params} 
+              style={{
+                color: "#fff" 
+              }}  
+              variant="standard" 
+              color="secondary"
+              margin="none"  
+              fullWidth 
+              onChange = {this.onChange}
+            />
+            <FormHelperText style={{color: "#fff", paddingLeft: "15%"}}>{this.props.name}</FormHelperText>
+          </FormControl>
         )}
       />
     );
   }
 }
+
+export default withStyles(styles)(CityComponent)

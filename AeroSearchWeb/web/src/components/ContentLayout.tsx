@@ -9,10 +9,14 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-    //   "padding-top": "12px",
-    // //   "padding-bottom": "24px",
-    //   "padding-left": "12px",
-    //   "padding-right": "12px"    
+    },
+    toolbar:{
+      padding: theme.spacing(1, 1),
+      alignContent: "horizontal",
+    },
+    select:{
+      "margin-left": "1px",
+      "margin-right": "1px",    
     },
     zoom: {
       position: 'fixed',
@@ -52,8 +56,9 @@ export default function ContentLayout(props: ScrollTopProps) {
   return (
     <div className={classes.root}>
       <AppBar position="fixed" color="primary">
-        <Toolbar>
-          <Select
+        <div className={classes.toolbar}>
+          <Select 
+            className={classes.select}
             value={value}
             defaultValue={0}
             onChange={handleChange}            
@@ -63,6 +68,7 @@ export default function ContentLayout(props: ScrollTopProps) {
             <MenuItem value={2}>Составной маршрут</MenuItem>
           </Select>
           <Select
+            className={classes.select}
             value={value}
             defaultValue={0}
           >
@@ -72,8 +78,7 @@ export default function ContentLayout(props: ScrollTopProps) {
             <MenuItem value={3}>Первый класс</MenuItem>
 
           </Select>
-        </Toolbar>
-
+        </div>
         {/* <Tabs variant="fullWidth" value={value} centered onChange={handleChange} aria-label="disabled tabs example">
           <Tab label="Простой поиск" />
           <Tab label="Сложный поиск" />
