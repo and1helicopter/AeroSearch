@@ -68,8 +68,8 @@ class CityComponent extends React.Component<ICityComponentProps & ICityComponent
     xhr.responseType = 'json';
     xhr.onload = () => {
         if (xhr.status == 200) {
-          let xxx = xhr.response.map((item: any) => {return  {code: item.code,name:item.name}});
-          this.setState({autocompleteData: xxx});
+          let autocompleteDataTemp = xhr.response.map((item: any) => {return  {code: item.code, name:item.name}});
+          this.setState({autocompleteData: autocompleteDataTemp});
         }
     };
     xhr.send();

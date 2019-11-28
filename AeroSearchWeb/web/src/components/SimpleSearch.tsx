@@ -50,6 +50,8 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
     this.handleDestinationChange = this.handleDestinationChange.bind(this);
     this.handleShowBackDate = this.handleShowBackDate.bind(this);
     this.handleSwapOriginAndDistination = this.handleSwapOriginAndDistination.bind(this);
+    this.handleDepartureChange = this.handleDepartureChange.bind(this);
+    this.handleArrivedChange = this.handleArrivedChange.bind(this);
   };
 
   handleShowBackDate(){
@@ -70,6 +72,14 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
 
     this.setState({Origin: oldDistiantion});
     this.setState({Destination: oldOrigin});
+  }
+
+  handleDepartureChange(){
+
+  }
+
+  handleArrivedChange(){
+
   }
 
   render(){
@@ -93,10 +103,10 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
               <Checkbox checked={this.state.IsReturn} onChange={this.handleShowBackDate} value={this.state.IsReturn} color="secondary" />
             </Grid>             
             <Grid item>
-              <DateComponent disable={false} name="Вылет"></DateComponent>
+              <DateComponent onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
             </Grid>  
             <Grid item>
-              <DateComponent disable={!this.state.IsReturn} name="Обратно"></DateComponent>
+              <DateComponent onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
             </Grid>        
             <Grid item>
               <Button color="secondary" variant="contained" >Поиск</Button>

@@ -7,12 +7,20 @@ import { Grid, FormControl, FormHelperText } from '@material-ui/core';
 
 const styles = () =>
   ({
-    keyboardDatePicker: { 
+    keyboardDatePickerOn: { 
       width: 300,
       marginLeft: 8,
       marginRight: 8,
       '& .MuiInputBase-root': {
-        color: "white"
+        color: "#ffffff"
+      }   
+    },
+    keyboardDatePickerOff: { 
+      width: 300,
+      marginLeft: 8,
+      marginRight: 8,
+      '& .MuiInputBase-root': {
+        color: "#1e5abd"
       }   
     },
     formHelperText:{
@@ -25,6 +33,7 @@ const styles = () =>
 interface IDateComponentProps {
   name: string;
   disable: boolean;
+  onDateChange: any;
 }
 
 interface IDateComponentState {
@@ -59,7 +68,7 @@ class DateComponent extends React.Component<IDateComponentProps & IDateComponent
         <Grid container justify="space-around">
         <FormControl fullWidth className={classes.formControl}>
           <KeyboardDatePicker
-              className={classes.keyboardDatePicker}
+              className={!this.props.disable ? classes.keyboardDatePickerOn : classes.keyboardDatePickerOff}
               disabled={this.props.disable}
               disableToolbar
               disablePast
