@@ -1,21 +1,35 @@
 import * as React from 'react';
 import {TextField, FormControl, FormHelperText } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles, createStyles, Theme, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-const styles = (theme: Theme) =>
-  createStyles({
+const styles = () =>
+  ({
     textField: { 
-      color: "#fff"   
+      '& .MuiInputBase-root': {
+        color: "white"
+      }   
     },
-    "label.MuiFormLabel-root":{
-      color: "#fff"
+    autocomplete: {
+      width: 300,
+      marginLeft: 8,
+      marginRight: 8,
+    },
+    formControl: {
+      width: "100%"
+    },
+    formHelperText:{
+      color: "white",
+      paddingLeft: "5%",
+      margin: 4
     }
   });
 
 interface ICityComponentProps {
+  value: any;
   name: string;
   lang: string;
+  onNameChange: any;
 }
 
 interface ICityComponentState {
@@ -23,8 +37,17 @@ interface ICityComponentState {
   autocompleteData: any;
 }
 
-class CityComponent extends React.Component<ICityComponentProps & any, ICityComponentState> {
-  constructor(props: ICityComponentProps)
+interface ICityComponentStyle {
+  classes: any;
+}
+
+interface IPlace{
+  name: string;
+  code: string;
+}
+
+class CityComponent extends React.Component<ICityComponentProps & ICityComponentStyle, ICityComponentState> {
+  constructor(props: ICityComponentProps & ICityComponentStyle)
   {
     super(props);
     
@@ -34,6 +57,7 @@ class CityComponent extends React.Component<ICityComponentProps & any, ICityComp
     }
     
     this.onChange = this.onChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
     this.retrieveDataAsynchronously = this.retrieveDataAsynchronously.bind(this);
   }
 
@@ -44,46 +68,46 @@ class CityComponent extends React.Component<ICityComponentProps & any, ICityComp
     xhr.responseType = 'json';
     xhr.onload = () => {
         if (xhr.status == 200) {
-          this.setState({
-            autocompleteData: xhr.response
-          });
-
-          console.log(this.state.autocompleteData);
-        } 
+          let xxx = xhr.response.map((item: any) => {return  {code: item.code,name:item.name}});
+          this.setState({autocompleteData: xxx});
+        }
     };
-
     xhr.send();
-  }
+  };
 
   onChange(e: any){
-    this.setState({
-        value: e.target.value
-    });
-
+    this.setState({value: e.target.value});
     this.retrieveDataAsynchronously(e.target.value);
-  }
+  };
+
+  onSelect(event: object, value: any){
+    this.props.onNameChange(value);
+  };
 
   render(){
+    const {classes} = this.props;
     return (
       <Autocomplete
+        className = {classes.autocomplete}
         options={this.state.autocompleteData}
         getOptionLabel={(option) => `${option.code} - ${option.name}` }
-        style={{ width: 300 }}
         disableOpenOnFocus={true}
+        value={this.props.value}
+        freeSolo
+        onChange={this.onSelect}
         renderInput={(params: any) => (
-          <FormControl fullWidth style={{width: "100%"}}>
+          <FormControl fullWidth className={classes.formControl}>
             <TextField
               {...params} 
-              style={{
-                color: "#fff" 
-              }}  
+              className={classes.textField}
+              value={this.props.value}
               variant="standard" 
               color="secondary"
               margin="none"  
               fullWidth 
               onChange = {this.onChange}
             />
-            <FormHelperText style={{color: "#fff", paddingLeft: "15%"}}>{this.props.name}</FormHelperText>
+            <FormHelperText className={classes.formHelperText}>{this.props.name}</FormHelperText>
           </FormControl>
         )}
       />
