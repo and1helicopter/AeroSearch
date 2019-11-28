@@ -34,6 +34,7 @@ interface IDateComponentProps {
   name: string;
   disable: boolean;
   onDateChange: any;
+  minDate: Date | null;
 }
 
 interface IDateComponentState {
@@ -59,6 +60,7 @@ class DateComponent extends React.Component<IDateComponentProps & IDateComponent
 
   handleDateChange(newDate: Date | null){
     this.setState({date: newDate});
+    this.props.onDateChange(newDate)
   };
 
   render(){
@@ -72,6 +74,7 @@ class DateComponent extends React.Component<IDateComponentProps & IDateComponent
               disabled={this.props.disable}
               disableToolbar
               disablePast
+              minDate ={this.props.minDate}
               color="secondary"
               variant="inline"
               format="dd-MM-yyyy"

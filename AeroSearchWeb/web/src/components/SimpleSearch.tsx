@@ -25,8 +25,8 @@ interface ISimpleSearchState {
   IsReturn: boolean;
   Origin: any;
   Destination: any;
-  Departure: Date | null;
-  Arrived: Date | null;
+  From: Date | null;
+  To: Date | null;
 }
 
 interface ISimpleSearchStyle {
@@ -42,8 +42,8 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
       IsReturn: true,
       Origin: null,
       Destination: null,
-      Departure: null,
-      Arrived: null,
+      From: new Date(),
+      To: new Date(),
     }
 
     this.handleOriginChange = this.handleOriginChange.bind(this);
@@ -74,12 +74,12 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
     this.setState({Destination: oldOrigin});
   }
 
-  handleDepartureChange(){
-
+  handleDepartureChange(date: Date | null){
+    this.setState({From: date});
   }
 
-  handleArrivedChange(){
-
+  handleArrivedChange(date: Date | null){
+    this.setState({To: date});    
   }
 
   render(){
@@ -103,10 +103,10 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
               <Checkbox checked={this.state.IsReturn} onChange={this.handleShowBackDate} value={this.state.IsReturn} color="secondary" />
             </Grid>             
             <Grid item>
-              <DateComponent onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
+              <DateComponent minDate={new Date()} onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
             </Grid>  
             <Grid item>
-              <DateComponent onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
+              <DateComponent minDate={this.state.From} onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
             </Grid>        
             <Grid item>
               <Button color="secondary" variant="contained" >Поиск</Button>
