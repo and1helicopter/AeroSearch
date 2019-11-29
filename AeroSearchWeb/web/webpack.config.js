@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const path = require('path');
 const merge = require('webpack-merge');
-
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const common ={
     entry: [
@@ -26,7 +27,7 @@ const common ={
         new HtmlWebpackPlugin({
             template: './src/index.html'
         }),
-        new webpack.HotModuleReplacementPlugin()       
+        new webpack.HotModuleReplacementPlugin(),
     ]
 };
 
@@ -35,7 +36,30 @@ const productionConfig  = {
     output: {
         filename: "build.js",
         path: path.resolve(__dirname, './build/')
-    }
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin({
+            terserOptions: {
+                ecma: undefined,
+                compress: true,
+                warnings: false,
+                parse: {},
+                compress: {},
+                mangle: true, // Note `mangle.properties` is `false` by default.
+                module: false,
+                output: null,
+                toplevel: false,
+                nameCache: null,
+                ie8: false,
+                keep_classnames: undefined,
+                keep_fnames: false,
+                safari10: false,
+              },
+        })],
+    },
+    plugins: [
+    ]
 };
 
 const developmentConfig  = {
@@ -52,6 +76,9 @@ const developmentConfig  = {
         inline: true, 
         open: true
     },
+    plugins: [
+        new BundleAnalyzerPlugin()  
+    ]
 };
 
 module.exports = function(env ) {

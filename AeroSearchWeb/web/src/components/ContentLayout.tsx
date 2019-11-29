@@ -1,122 +1,94 @@
 import * as React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import SimpleSearch from './SimpleSearch';
-import { Toolbar, Container, Box, Typography, AppBar, Tab, Tabs, Fab, useScrollTrigger, Zoom,  MenuItem, Select  } from '@material-ui/core';
+import SimpleSearch from './Search-components/SimpleSearch';
+import MainToolbar from './Search-components/MainToolbar';
+import { withStyles } from '@material-ui/core/styles';
+import { Toolbar, Container, Box, Typography, AppBar, Fab, useScrollTrigger, Zoom,  MenuItem, Select  } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+const styles = () =>
+  ({
     root: {
       flexGrow: 1,
     },
-    toolbar:{
-      padding: theme.spacing(1, 1),
-      alignContent: "horizontal",
-    },
-    select:{
-      "margin-left": "1px",
-      "margin-right": "1px",    
-    },
-    zoom: {
-      position: 'fixed',
-      bottom: theme.spacing(2),
-      right: theme.spacing(2),
-    },
-    content: {
-      "padding-top": "100px",
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary  
-    },
     swipeView:{
-      "padding-top": "1px",
-      "padding-bottom": "1px",
-      "padding-left": "1px",
-      "padding-right": "1px",
+      //display: "flex",
     }
-  }),
-);
+  });
 
-export default function ContentLayout(props: ScrollTopProps) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+interface IContentLayoutProps{
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setValue(event.target.value as number);
+}
+
+interface IContentLayoutState{
+  typeSearch: number,
+  typeType: number,
+}
+
+interface IContentLayoutStyle {
+  classes: any;
+}
+
+class ContentLayout extends React.Component<IContentLayoutProps & IContentLayoutStyle, IContentLayoutState> {
+  constructor(props: IContentLayoutProps & IContentLayoutStyle)
+  {
+    super(props);
+    
+    this.state = {
+       typeSearch: 0,
+       typeType: 0,
+    }
+
+    this.handleTypeSearchChange = this.handleTypeSearchChange.bind(this);
   };
 
-  const handleChangeIndex = (index: number) => {
-    console.log(index);
-    setValue(index);
+
+  handleTypeSearchChange(value: number){
+    this.setState({typeSearch: value});
   };
 
-  return (
-    <div className={classes.root}>
-      <AppBar position="fixed" color="primary">
-        <div className={classes.toolbar}>
-          <Select 
-            className={classes.select}
-            value={value}
-            defaultValue={0}
-            onChange={handleChange}            
-          >
-            <MenuItem value={0}>Простой поиск</MenuItem>
-            <MenuItem value={1}>Сложный поиск</MenuItem>
-            <MenuItem value={2}>Составной маршрут</MenuItem>
-          </Select>
-          <Select
-            className={classes.select}
-            value={value}
-            defaultValue={0}
-          >
-            <MenuItem value={0}>Эконом</MenuItem>
-            <MenuItem value={1}>Комфорт</MenuItem>
-            <MenuItem value={2}>Бизнес</MenuItem>
-            <MenuItem value={3}>Первый класс</MenuItem>
-
-          </Select>
-        </div>
-        {/* <Tabs variant="fullWidth" value={value} centered onChange={handleChange} aria-label="disabled tabs example">
-          <Tab label="Простой поиск" />
-          <Tab label="Сложный поиск" />
-          <Tab label="Составной маршрут" />
-        </Tabs> */}
-        <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-            <TabPanel value={value} index={0}>
+  render(){
+    return (
+      <div>
+        <AppBar position="fixed" color="primary">
+          <MainToolbar onTypeSearchChange={this.handleTypeSearchChange} onTypePassagerChange={null} onTypeTypeChange={null}></MainToolbar> 
+          <SwipeableViews index={this.state.typeSearch}>
+            <TabPanel value={this.state.typeSearch} index={0}>
               <SimpleSearch></SimpleSearch>
             </TabPanel>
-            <TabPanel value={value} index={1}>
-            <SimpleSearch></SimpleSearch>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-            <SimpleSearch></SimpleSearch>
-            </TabPanel>
-        </SwipeableViews>
-      </AppBar>
-      <Toolbar id="back-to-top-anchor" />
-      <Container className={classes.content}> 
-        <Box my={2}>
-          {[...new Array(122)]
-            .map(
-              () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-            )
-            .join('\n')}
-        </Box>
-      </Container>
-      <ScrollTop {...props}>
-        <Fab color="primary" size="small" aria-label="scroll back to top">
-          <KeyboardArrowUpIcon />
-        </Fab>
-      </ScrollTop>
-    </div>
-  );
+                <TabPanel value={this.state.typeSearch} index={1}>
+                <SimpleSearch></SimpleSearch>
+                </TabPanel>
+                <TabPanel value={this.state.typeSearch} index={2}>
+                <SimpleSearch></SimpleSearch>
+                </TabPanel>
+          </SwipeableViews>
+        </AppBar>
+  
+        <Toolbar id="back-to-top-anchor" />
+        <Container> 
+          <Box my={2}>
+            {[...new Array(122)]
+              .map(
+                () => `Cras mattis consectetur purus sit amet fermentum.
+  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+  Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+  Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
+              )
+              .join('\n')}
+          </Box>
+        </Container>
+        <ScrollTop {...this.props}>
+          <Fab color="primary" size="small" aria-label="scroll back to top">
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </ScrollTop>
+      </div>
+    );
+  }
 }
+
+export default withStyles(styles)(ContentLayout);
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -126,12 +98,13 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-  const classes = useStyles();
+ // const classes = useStyles();
   const { children, value, index, ...other } = props;
 
   return (
     <Typography component="div" role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`}>
-      <Box className={classes.swipeView}>{children}</Box>
+      <Box >{children}</Box>  
+      {/* className={classes.swipeView} */}
     </Typography>
   );
 }
@@ -147,7 +120,7 @@ interface ScrollTopProps {
 
 function ScrollTop(props: ScrollTopProps) {
   const { children, window } = props;
-  const classes = useStyles();
+ // const classes = useStyles();
   // Note that you normally won't need to set the window ref as useScrollTrigger
   // will default to window.
   // This is only being set here because the demo is in an iframe.
@@ -169,7 +142,8 @@ function ScrollTop(props: ScrollTopProps) {
 
   return (
     <Zoom in={trigger}>
-      <div onClick={handleClick} role="presentation" className={classes.zoom}>
+      <div onClick={handleClick} role="presentation" >
+      {/* className={classes.zoom} */}
         {children}
       </div>
     </Zoom>

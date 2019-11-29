@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
-import CityComponent from './UI-components/CityComponent';
-import DateComponent from './UI-components/DateComponent';
-import { Grid, Button, Fab, Checkbox } from '@material-ui/core';
+import CityComponent from '../UI-components/CityComponent';
+import DateComponent from '../UI-components/DateComponent';
+import { Grid, Button, Fab, Checkbox, AppBar } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
 const styles = () =>
@@ -25,8 +25,8 @@ interface ISimpleSearchState {
   IsReturn: boolean;
   Origin: any;
   Destination: any;
-  From: Date | null;
-  To: Date | null;
+  Departure: Date | null;
+  Return: Date | null;
 }
 
 interface ISimpleSearchStyle {
@@ -42,8 +42,8 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
       IsReturn: true,
       Origin: null,
       Destination: null,
-      From: new Date(),
-      To: new Date(),
+      Departure: new Date(),
+      Return: new Date(),
     }
 
     this.handleOriginChange = this.handleOriginChange.bind(this);
@@ -75,45 +75,45 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
   }
 
   handleDepartureChange(date: Date | null){
-    this.setState({From: date});
+    this.setState({Departure: date});
   }
 
   handleArrivedChange(date: Date | null){
-    this.setState({To: date});    
+    this.setState({Return: date});    
   }
 
   render(){
     const {classes} = this.props;
     return (
       <Grid container className={classes.root} spacing={0}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={0} >
-            <Grid item>
-              <CityComponent name={"Откуда"} value={this.state.Origin} onNameChange={this.handleOriginChange} lang="ru"></CityComponent>
-            </Grid>
-            <Grid item>
-              <Fab onClick={this.handleSwapOriginAndDistination} color="secondary" size="small" variant="round" className={classes.align}>
-                <SyncAltIcon/>
-              </Fab>
-            </Grid>    
-            <Grid item>
-              <CityComponent name="Куда" value={this.state.Destination} onNameChange={this.handleDestinationChange} lang="ru"></CityComponent>
-            </Grid> 
-            <Grid item>
-              <Checkbox checked={this.state.IsReturn} onChange={this.handleShowBackDate} value={this.state.IsReturn} color="secondary" />
-            </Grid>             
-            <Grid item>
-              <DateComponent minDate={new Date()} onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
-            </Grid>  
-            <Grid item>
-              <DateComponent minDate={this.state.From} onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
-            </Grid>        
-            <Grid item>
-              <Button color="secondary" variant="contained" >Поиск</Button>
-            </Grid>
+      <Grid item xs={12}>
+        <Grid container justify="center" spacing={0} >
+          <Grid item>
+            <CityComponent name={"Откуда"} value={this.state.Origin} onNameChange={this.handleOriginChange} lang="ru"></CityComponent>
           </Grid>
-        </Grid>      
-      </Grid>
+          <Grid item>
+            <Fab onClick={this.handleSwapOriginAndDistination} color="secondary" size="small" variant="round" className={classes.align}>
+              <SyncAltIcon/>
+            </Fab>
+          </Grid>    
+          <Grid item>
+            <CityComponent name="Куда" value={this.state.Destination} onNameChange={this.handleDestinationChange} lang="ru"></CityComponent>
+          </Grid> 
+          <Grid item>
+            <Checkbox checked={this.state.IsReturn} onChange={this.handleShowBackDate} value={this.state.IsReturn} color="secondary" />
+          </Grid>             
+          <Grid item>
+            <DateComponent minDate={new Date()} onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
+          </Grid>  
+          <Grid item>
+            <DateComponent minDate={this.state.Departure} onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
+          </Grid>        
+          <Grid item>
+            <Button color="secondary" variant="contained" >Поиск</Button>
+          </Grid>
+        </Grid>
+      </Grid>      
+    </Grid>
     );
   }
 };
