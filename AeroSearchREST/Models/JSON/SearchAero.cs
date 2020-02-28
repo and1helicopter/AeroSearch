@@ -1,5 +1,10 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace AeroSearchREST.JSON
 {
@@ -13,13 +18,16 @@ namespace AeroSearchREST.JSON
 
         [JsonProperty("gates_info", Required = Required.Default)]
         public SearchAeroRS_GatesInfo GatesInfo;
+
+        [JsonProperty("airports", Required = Required.Default)]
+        public SearchAeroRS_Airports Airports;
     }
 
     public class SearchAeroRS_Proposal
     {
         [JsonProperty("terms", Required = Required.Default)]
         public SearchAeroRS_Proposal_Terms Terms;
-        
+
         [JsonProperty("validating_carrier", Required = Required.Default)]
         public string ValidatingCarrier;
 
@@ -29,9 +37,10 @@ namespace AeroSearchREST.JSON
 
     public class SearchAeroRS_Proposal_Terms
     {
-        [JsonProperty("16", Required = Required.Default)]
-        public SearchAeroRS_Proposal_Terms_Price Price;
-    }
+      //  [JsonConverter(typeof(SearchAeroRS_Proposal_Terms_Price_Converter))]
+        [JsonExtensionData]
+        public Dictionary<string, JToken> Variables;
+    }  
 
     public class SearchAeroRS_Proposal_Terms_Price
     {
@@ -60,7 +69,7 @@ namespace AeroSearchREST.JSON
         public DateTime ArrivalDate;
 
         [JsonProperty("arrival_time", Required = Required.Default)]
-        public DateTime arrivalTime;
+        public DateTime ArrivalTime;
 
         [JsonProperty("delay", Required = Required.Default)]
         public int Delay;
@@ -77,6 +86,9 @@ namespace AeroSearchREST.JSON
         [JsonProperty("duration", Required = Required.Default)]
         public int Duration;
 
+        [JsonProperty("operating_carrier", Required = Required.Default)]
+        public string Carrier;
+
         [JsonProperty("number", Required = Required.Default)]
         public string Number;
 
@@ -86,13 +98,42 @@ namespace AeroSearchREST.JSON
 
     public class SearchAeroRS_GatesInfo
     {
-        [JsonProperty("16", Required = Required.Default)]
-        public SearchAeroRS_GatesInfo_Site Site;
+        [JsonExtensionData]
+        public Dictionary<string, JToken> Site;
     }
 
     public class SearchAeroRS_GatesInfo_Site
     {
         [JsonProperty("site", Required = Required.Default)]
         public string Site;
+    }
+
+    public class SearchAeroRS_Airports
+    {
+        [JsonExtensionData]
+        public Dictionary<string, JToken> Airports;
+    }
+
+    public class SearchAeroRS_Airports_Airport 
+    {
+        [JsonProperty("name", Required = Required.Default)]
+        public int Name;
+
+        [JsonProperty("city", Required = Required.Default)]
+        public string City;
+
+        [JsonProperty("country", Required = Required.Default)]
+        public string Country;
+
+        [JsonProperty("time_zone", Required = Required.Default)]
+        public string TimeZone;
+
+
+        //[JsonProperty("country", Required = Required.Default)]
+        //public double Country;
+
+
+        //[JsonProperty("country", Required = Required.Default)]
+        //public double Country;
     }
 }
