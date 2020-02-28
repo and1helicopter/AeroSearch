@@ -13,10 +13,13 @@ namespace AeroSearchREST.Initialize
     {
         public static void Initialize(AeroSearchContext aeroSearchContext, IServiceRedisCache memoryCache)
         {
+            //Достаем из БД аэропорты
             var airports = aeroSearchContext.Airport.ToList();
 
+            //Достаем из БД города
             var cities = aeroSearchContext.City.ToList();
 
+            //Засовываем аэропоты и города в кэш
             var redis = memoryCache.Cache;
 
             foreach (var airport in airports)

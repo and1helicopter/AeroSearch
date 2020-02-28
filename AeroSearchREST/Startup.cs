@@ -23,17 +23,14 @@ namespace AeroSearchREST
         {
             services.AddControllers();
 
+            //Подключение БД
             services.AddDbContext<AeroSearchContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
 
+            //Подключаем рэдис
             services.AddSingleton<IServiceRedisCache>(new ServiceRedisCache(Configuration.GetConnectionString("RedisHost")));
 
-            //services.AddDistributedRedisCache(option =>
-            //    {
-            //        option.Configuration = Configuration.GetConnectionString("RedisHost");
-            //        option.InstanceName = Configuration.GetConnectionString("RedisInstance");                           
-            //    });
-
+            //Подключение свагера
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AeroSearch API", Version = "v1" });
@@ -65,17 +62,13 @@ namespace AeroSearchREST
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();    // аутентификация
+            app.UseAuthorization();     // авторизация
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });            
-        }
-
-        public void Initialize()
-        {
-
         }
     }
 }
