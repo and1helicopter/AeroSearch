@@ -7,10 +7,10 @@ import theme from '../themes/theme';
 import { connect } from 'react-redux';
 
 const styles = {
-    root: {
-        height: "500px",
-        background: "#cfd8dc"
-    }, 
+    // root: {
+    //     height: "500px",
+    //     background: "#cfd8dc"
+    // }, 
 };
 
 const mapStateToProps = (store: any) => ({app: store.app})

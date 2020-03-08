@@ -2,8 +2,8 @@ import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import SimpleSearch from './SimpleSearch';
-import { Toolbar, Container, Box, Typography, AppBar, Tab, Tabs, Fab, useScrollTrigger, Zoom,  MenuItem, Select  } from '@material-ui/core';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Box, Typography,  useScrollTrigger, Zoom,  Grid,   } from '@material-ui/core';
+import MenuComponent from './UI-components/MenuComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,67 +54,32 @@ export default function ContentLayout(props: ScrollTopProps) {
   };
 
   return (
-    <div className={classes.root}>
-      <AppBar position="fixed" color="primary">
-        <div className={classes.toolbar}>
-          <Select 
-            className={classes.select}
-            value={value}
-            defaultValue={0}
-            onChange={handleChange}            
-          >
-            <MenuItem value={0}>Простой поиск</MenuItem>
-            <MenuItem value={1}>Сложный поиск</MenuItem>
-            <MenuItem value={2}>Составной маршрут</MenuItem>
-          </Select>
-          <Select
-            className={classes.select}
-            value={value}
-            defaultValue={0}
-          >
-            <MenuItem value={0}>Эконом</MenuItem>
-            <MenuItem value={1}>Комфорт</MenuItem>
-            <MenuItem value={2}>Бизнес</MenuItem>
-            <MenuItem value={3}>Первый класс</MenuItem>
+    <Grid container direction="column" justify="center">
+      {/*Head menu*/}
+      <Grid item>
+        <MenuComponent></MenuComponent>
+      </Grid>
+      {/*Select bar */}
+      <Grid item>
 
-          </Select>
-        </div>
-        {/* <Tabs variant="fullWidth" value={value} centered onChange={handleChange} aria-label="disabled tabs example">
-          <Tab label="Простой поиск" />
-          <Tab label="Сложный поиск" />
-          <Tab label="Составной маршрут" />
-        </Tabs> */}
-        <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+      </Grid>
+      {/*Search bar */}
+      <Grid item>
+        <Box>
+          <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
             <TabPanel value={value} index={0}>
               <SimpleSearch></SimpleSearch>
             </TabPanel>
             <TabPanel value={value} index={1}>
-            <SimpleSearch></SimpleSearch>
+              <SimpleSearch></SimpleSearch>
             </TabPanel>
             <TabPanel value={value} index={2}>
-            <SimpleSearch></SimpleSearch>
+              <SimpleSearch></SimpleSearch>
             </TabPanel>
-        </SwipeableViews>
-      </AppBar>
-      <Toolbar id="back-to-top-anchor" />
-      <Container className={classes.content}> 
-        <Box my={2}>
-          {[...new Array(122)]
-            .map(
-              () => `Cras mattis consectetur purus sit amet fermentum.
-Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-            )
-            .join('\n')}
+          </SwipeableViews>
         </Box>
-      </Container>
-      <ScrollTop {...props}>
-        <Fab color="primary" size="small" aria-label="scroll back to top">
-          <KeyboardArrowUpIcon />
-        </Fab>
-      </ScrollTop>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 
