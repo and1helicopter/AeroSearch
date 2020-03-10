@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { AppBar, Toolbar, IconButton, Tooltip, Typography, MenuItem, Button, Menu } from '@material-ui/core';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import {AccountCircle, Language, AttachMoney, EuroSymbol} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-import LanguageIcon from '@material-ui/icons/Language';
-import { object } from 'prop-types';
 
 const styles = () =>
 ({
@@ -21,8 +19,10 @@ interface ICityComponentStyle {
 }
 
 interface IMenuComponentState {
-    anchorElement: any;
+    anchorElementLang: any;
+    anchorElementCurrency: any;
     language: string;
+    currency: string;
 }
   
 
@@ -32,35 +32,47 @@ class MenuComponent extends React.Component<IMenuComponent & ICityComponentStyle
         super(props);  
 
         this.state = {
-            anchorElement: null,
-            language: "Русский" /*Устанавдиваем по-умолчанию из props*/
+            anchorElementLang: null,
+            anchorElementCurrency: null,
+            language: "Русский", /*Устанавдиваем по-умолчанию из props*/
+            currency: "RUB", /*Устанавдиваем по-умолчанию из props*/
         }
           
         this.handleClose = this.handleClose.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.handleChengeLanguage = this.handleChengeLanguage.bind(this);
-
+        this.handleChangeLanguage = this.handleChangeLanguage.bind(this);
+        this.handleChengeLanguageClick = this.handleChengeLanguageClick.bind(this);
+        this.handleChangeCurrency = this.handleChangeCurrency.bind(this);
+        this.handleChengeCurrencyClick = this.handleChengeCurrencyClick.bind(this);
     };
 
-    handleClick(event: React.MouseEvent<HTMLButtonElement>){
-        this.setState({anchorElement: event.currentTarget});
+    handleChangeLanguage(event: React.MouseEvent<HTMLButtonElement>){
+        this.setState({anchorElementLang: event.currentTarget});
         // setAnchorEl(event.currentTarget);
     };
 
+    handleChangeCurrency(event: React.MouseEvent<HTMLButtonElement>){
+        this.setState({anchorElementCurrency: event.currentTarget});
+        // setAnchorEl(event.currentTarget);
+    };
     // onSelect(event: object, value: any){
     //     this.props.onNameChange(value);
     // };
 
     handleClose(event: object){
-        this.setState({anchorElement: null});
-
-        // setAnchorEl(null);
+        this.setState({anchorElementLang: null});
+        this.setState({anchorElementCurrency: null});
     };
 
-    handleChengeLanguage(event: any)
+    handleChengeLanguageClick(event: any)
     {  
         this.setState({language: event.target.textContent});
-        this.setState({anchorElement: null});
+        this.setState({anchorElementLang: null});
+    }
+
+    handleChengeCurrencyClick(event: any)
+    {  
+        this.setState({currency: event.target.textContent});
+        this.setState({anchorElementCurrency: null});
     }
 
     render(){
@@ -72,21 +84,35 @@ class MenuComponent extends React.Component<IMenuComponent & ICityComponentStyle
                     <Typography variant="h6" className={classes.typography}>
                         AeroSearch
                     </Typography>
+                    {/* Currency */}
+                    <Tooltip title="Currency">
+                    <Button variant="text" color="inherit" onClick={this.handleChangeCurrency}
+                        startIcon={this.state.currency == 'USD' ? <AttachMoney/> : this.state.currency == 'EUR' ? <EuroSymbol/> : null } 
+                    >
+                        {this.state.currency}
+                    </Button>
+                    </Tooltip>
+                    <Menu id="lock-menu" anchorEl={this.state.anchorElementCurrency} keepMounted open={Boolean(this.state.anchorElementCurrency)} onClose={this.handleClose}>
+                        {/*Нужнео подавать список доступных валют */}
+                        <MenuItem value={'RUB'} onClick={this.handleChengeCurrencyClick}>RUB</MenuItem>
+                        <MenuItem value={'USD'} onClick={this.handleChengeCurrencyClick}>USD</MenuItem>
+                        <MenuItem value={'EUR'} onClick={this.handleChengeCurrencyClick}>EUR</MenuItem>
+                    </Menu>
                     {/* Language */}
                     <Tooltip title="Language">
-                        <Button variant="text" color="inherit" startIcon={<LanguageIcon/>} onClick={this.handleClick}>
+                        <Button variant="text" color="inherit" startIcon={<Language/>} onClick={this.handleChangeLanguage}>
                             {this.state.language}
                         </Button>
                     </Tooltip>
-                    <Menu id="lock-menu" anchorEl={this.state.anchorElement} keepMounted open={Boolean(this.state.anchorElement)} onClose={this.handleClose}>
+                    <Menu id="lock-menu" anchorEl={this.state.anchorElementLang} keepMounted open={Boolean(this.state.anchorElementLang)} onClose={this.handleClose}>
                         {/*Нужнео подавать список доступных языков */}
-                        <MenuItem value={'Русский'} onClick={this.handleChengeLanguage}>Русский</MenuItem>
-                        <MenuItem value={'English'} onClick={this.handleChengeLanguage}>English</MenuItem>
+                        <MenuItem value={'Русский'} onClick={this.handleChengeLanguageClick}>Русский</MenuItem>
+                        <MenuItem value={'English'} onClick={this.handleChengeLanguageClick}>English</MenuItem>
                     </Menu>
                     {/* Login */}
                     <IconButton edge="end" color="inherit" /*aria-label="login" onClick={}*/ >
                         <Tooltip title="Login">
-                            <AccountCircleIcon fontSize="inherit"/>
+                            <AccountCircle fontSize="inherit"/>
                         </Tooltip>
                     </IconButton>
                 </Toolbar>

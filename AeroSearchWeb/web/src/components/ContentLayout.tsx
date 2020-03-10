@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import SimpleSearch from './SimpleSearch';
 import { Box, Typography,  useScrollTrigger, Zoom,  Grid,   } from '@material-ui/core';
 import MenuComponent from './Web-Components/MenuComponent';
 import SelectBarComponent from './Web-Components/SelectComponent';
+import SearchComponent from './Web-Components/SearchComponent';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,25 +60,17 @@ export default function ContentLayout(props: ScrollTopProps) {
       <Grid item>
         <MenuComponent></MenuComponent>
       </Grid>
+      {/*Search bar */}
+      <Grid item>
+        <SearchComponent></SearchComponent>
+      </Grid>
       {/*Select bar */}
       <Grid item>
         <SelectBarComponent></SelectBarComponent>
       </Grid>
-      {/*Search bar */}
+
+      {/* Results */}
       <Grid item>
-        <Box>
-          <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-            <TabPanel value={value} index={0}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-          </SwipeableViews>
-        </Box>
       </Grid>
     </Grid>
   );

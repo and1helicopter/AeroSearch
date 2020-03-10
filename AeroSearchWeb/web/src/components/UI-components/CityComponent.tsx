@@ -5,11 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = () =>
   ({
-    textField: { 
-      '& .MuiInputBase-root': {
-        color: "white"
-      }   
-    },
+    // textField: { 
+    //   // '& .MuiInputBase-root': {
+    //   //   color: "white"
+    //   // }   
+    // },
     autocomplete: {
       width: 300,
       marginLeft: 8,
@@ -19,7 +19,7 @@ const styles = () =>
       width: "100%"
     },
     formHelperText:{
-      color: "white",
+      // color: "white",
       paddingLeft: "5%",
       margin: 4
     }

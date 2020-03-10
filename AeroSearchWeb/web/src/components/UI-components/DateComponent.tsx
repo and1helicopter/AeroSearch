@@ -11,9 +11,9 @@ const styles = () =>
       width: 300,
       marginLeft: 8,
       marginRight: 8,
-      '& .MuiInputBase-root': {
-        color: "#ffffff"
-      }   
+      // '& .MuiInputBase-root': {
+      //   color: "#ffffff"
+      // }   
     },
     keyboardDatePickerOff: { 
       width: 300,
@@ -24,7 +24,7 @@ const styles = () =>
       }   
     },
     formHelperText:{
-      color: "white",
+      // color: "white",
       paddingLeft: "5%",
       margin: 4,
     }
