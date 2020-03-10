@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, Tooltip, Typography, MenuItem, Button, Men
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { withStyles } from '@material-ui/core/styles';
 import LanguageIcon from '@material-ui/icons/Language';
+import { object } from 'prop-types';
 
 const styles = () =>
 ({
@@ -20,7 +21,8 @@ interface ICityComponentStyle {
 }
 
 interface IMenuComponentState {
-    anchorEl: any;
+    anchorElement: any;
+    language: string;
 }
   
 
@@ -30,15 +32,18 @@ class MenuComponent extends React.Component<IMenuComponent & ICityComponentStyle
         super(props);  
 
         this.state = {
-            anchorEl: null
+            anchorElement: null,
+            language: "Русский" /*Устанавдиваем по-умолчанию из props*/
         }
           
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleChengeLanguage = this.handleChengeLanguage.bind(this);
+
     };
 
     handleClick(event: React.MouseEvent<HTMLButtonElement>){
-        this.setState({anchorEl: event.currentTarget});
+        this.setState({anchorElement: event.currentTarget});
         // setAnchorEl(event.currentTarget);
     };
 
@@ -47,10 +52,16 @@ class MenuComponent extends React.Component<IMenuComponent & ICityComponentStyle
     // };
 
     handleClose(event: object){
-        this.setState({anchorEl: null});
+        this.setState({anchorElement: null});
 
         // setAnchorEl(null);
     };
+
+    handleChengeLanguage(event: any)
+    {  
+        this.setState({language: event.target.textContent});
+        this.setState({anchorElement: null});
+    }
 
     render(){
         const {classes} = this.props;
@@ -64,12 +75,13 @@ class MenuComponent extends React.Component<IMenuComponent & ICityComponentStyle
                     {/* Language */}
                     <Tooltip title="Language">
                         <Button variant="text" color="inherit" startIcon={<LanguageIcon/>} onClick={this.handleClick}>
-                            Русский
+                            {this.state.language}
                         </Button>
                     </Tooltip>
-                    <Menu id="lock-menu" anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.handleClose}>
-                        <MenuItem value={'Русский'}>Русский</MenuItem>
-                        <MenuItem value={'English'}>English</MenuItem>
+                    <Menu id="lock-menu" anchorEl={this.state.anchorElement} keepMounted open={Boolean(this.state.anchorElement)} onClose={this.handleClose}>
+                        {/*Нужнео подавать список доступных языков */}
+                        <MenuItem value={'Русский'} onClick={this.handleChengeLanguage}>Русский</MenuItem>
+                        <MenuItem value={'English'} onClick={this.handleChengeLanguage}>English</MenuItem>
                     </Menu>
                     {/* Login */}
                     <IconButton edge="end" color="inherit" /*aria-label="login" onClick={}*/ >
