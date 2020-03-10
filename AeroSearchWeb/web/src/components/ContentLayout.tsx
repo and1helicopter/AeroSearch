@@ -1,10 +1,8 @@
 import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import SimpleSearch from './Search-components/SimpleSearch';
-import MainToolbar from './Search-components/MainToolbar';
-import { withStyles } from '@material-ui/core/styles';
-import { Toolbar, Container, Box, Typography, AppBar, Fab, useScrollTrigger, Zoom,  MenuItem, Select  } from '@material-ui/core';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import SimpleSearch from './SimpleSearch';
+import { Box, Typography,  useScrollTrigger, Zoom,  Grid,   } from '@material-ui/core';
+import MenuComponent from './UI-components/MenuComponent';
 
 const styles = () =>
   ({
@@ -47,45 +45,34 @@ class ContentLayout extends React.Component<IContentLayoutProps & IContentLayout
     this.setState({typeSearch: value});
   };
 
-  render(){
-    return (
-      <div>
-        <AppBar position="fixed" color="primary">
-          <MainToolbar onTypeSearchChange={this.handleTypeSearchChange} onTypePassagerChange={null} onTypeTypeChange={null}></MainToolbar> 
-          <SwipeableViews index={this.state.typeSearch}>
-            <TabPanel value={this.state.typeSearch} index={0}>
+  return (
+    <Grid container direction="column" justify="center">
+      {/*Head menu*/}
+      <Grid item>
+        <MenuComponent></MenuComponent>
+      </Grid>
+      {/*Select bar */}
+      <Grid item>
+
+      </Grid>
+      {/*Search bar */}
+      <Grid item>
+        <Box>
+          <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+            <TabPanel value={value} index={0}>
               <SimpleSearch></SimpleSearch>
             </TabPanel>
-                <TabPanel value={this.state.typeSearch} index={1}>
-                <SimpleSearch></SimpleSearch>
-                </TabPanel>
-                <TabPanel value={this.state.typeSearch} index={2}>
-                <SimpleSearch></SimpleSearch>
-                </TabPanel>
+            <TabPanel value={value} index={1}>
+              <SimpleSearch></SimpleSearch>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              <SimpleSearch></SimpleSearch>
+            </TabPanel>
           </SwipeableViews>
-        </AppBar>
-  
-        <Toolbar id="back-to-top-anchor" />
-        <Container> 
-          <Box my={2}>
-            {[...new Array(122)]
-              .map(
-                () => `Cras mattis consectetur purus sit amet fermentum.
-  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
-  Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-  Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
-              )
-              .join('\n')}
-          </Box>
-        </Container>
-        <ScrollTop {...this.props}>
-          <Fab color="primary" size="small" aria-label="scroll back to top">
-            <KeyboardArrowUpIcon />
-          </Fab>
-        </ScrollTop>
-      </div>
-    );
-  }
+        </Box>
+      </Grid>
+    </Grid>
+  );
 }
 
 export default withStyles(styles)(ContentLayout);
