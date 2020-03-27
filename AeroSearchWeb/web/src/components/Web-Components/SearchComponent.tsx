@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 
 import CityComponent from '../UI-Components/CityComponent';
 import DateComponent from '../UI-Components/DateComponent';
-import { Grid, Button, Fab, Checkbox, AppBar } from '@material-ui/core';
+import { Grid, Button, Fab, Checkbox, AppBar, Collapse } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
 const styles = () =>
@@ -24,6 +23,7 @@ interface ISimpleSearchProps{
 }
 
 interface ISimpleSearchState {
+  IsAdvanced: boolean; 
   IsReturn: boolean;
   Origin: any;
   Destination: any;
@@ -46,11 +46,13 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
       Destination: null,
       From: new Date(),
       To: new Date(),
+      IsAdvanced: false
     }
 
     this.handleOriginChange = this.handleOriginChange.bind(this);
     this.handleDestinationChange = this.handleDestinationChange.bind(this);
     this.handleShowBackDate = this.handleShowBackDate.bind(this);
+    this.handleShowAdvanced = this.handleShowAdvanced.bind(this);
     this.handleSwapOriginAndDistination = this.handleSwapOriginAndDistination.bind(this);
     this.handleDepartureChange = this.handleDepartureChange.bind(this);
     this.handleArrivedChange = this.handleArrivedChange.bind(this);
@@ -66,6 +68,10 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
 
   handleDestinationChange(name: any) {
     this.setState({Destination: name});
+  };
+
+  handleShowAdvanced() {
+    this.setState({IsAdvanced: !this.state.IsAdvanced});
   };
 
   handleSwapOriginAndDistination(){
@@ -91,31 +97,56 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
         <Grid container className={classes.grid} spacing={0}>
           <Grid item xs={12}>
             <Grid container justify="center" spacing={0} >
+              {/*Departure*/}
               <Grid item>
                 <CityComponent name={"Откуда"} value={this.state.Origin} onNameChange={this.handleOriginChange} lang="ru"></CityComponent>
               </Grid>
+              {/*Switcher*/}                  
               <Grid item>
                 <Fab onClick={this.handleSwapOriginAndDistination} color="secondary" size="small" variant="round" className={classes.align}>
                   <SyncAltIcon/>
                 </Fab>
-              </Grid>    
+              </Grid>
+              {/*Destination*/}                  
               <Grid item>
                 <CityComponent name="Куда" value={this.state.Destination} onNameChange={this.handleDestinationChange} lang="ru"></CityComponent>
-              </Grid> 
+              </Grid>
+              {/*IsReturn*/}            
               <Grid item>
                 <Checkbox checked={this.state.IsReturn} onChange={this.handleShowBackDate} value={this.state.IsReturn} color="secondary" />
-              </Grid>             
+              </Grid> 
+              {/*Departure date*/}            
               <Grid item>
                 <DateComponent minDate={new Date()} onDateChange={this.handleDepartureChange} disable={false} name="Вылет"></DateComponent>
-              </Grid>  
+              </Grid> 
+              {/*Arrived date*/}           
               <Grid item>
                 <DateComponent minDate={this.state.From} onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
-              </Grid>        
+              </Grid>
+              {/*Show advanced search*/}            
+              <Grid item>
+                <Checkbox checked={this.state.IsAdvanced} onChange={this.handleShowAdvanced} value={this.state.IsAdvanced} color="secondary" />
+              </Grid>         
+            </Grid>
+          </Grid>
+        </Grid>
+        {/*Advanced search*/}
+        <Collapse in={this.state.IsAdvanced} >           
+          {this.state.IsAdvanced ? 
+            <Grid item xs={12} >
+              <Grid container justify="center" spacing={0} >Сложный поиск</Grid>
+            </Grid> : null
+          }
+        </Collapse>       
+        {/*Search button*/}   
+        <Grid container className={classes.grid} spacing={0}>
+          <Grid item xs={8}></Grid>       
+          <Grid item xs={4}>
+            <Grid container justify="center" spacing={0} >
               <Grid item>
                 <Button color="secondary" variant="contained">Поиск</Button>
-              </Grid>
-            </Grid>
-          </Grid>      
+              </Grid>    </Grid>
+          </Grid> 
         </Grid>
       </AppBar>
   
