@@ -3,7 +3,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 import CityComponent from '../UI-Components/CityComponent';
 import DateComponent from '../UI-Components/DateComponent';
-import { Grid, Button, Fab, Checkbox, AppBar, Collapse } from '@material-ui/core';
+import ParamsComponent from '../UI-components/ParamsComponent';
+import { Grid, Button, Checkbox, AppBar, Collapse, IconButton } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
 const styles = () =>
@@ -35,6 +36,29 @@ interface ISimpleSearchStyle {
   classes: any;
 }
 
+class Search_RQ
+{
+  know_english: boolean;
+  currency: string;
+  passengers: Search_Passengers;
+  segments: Array<Search_Segment>;
+}
+
+class Search_Passengers
+{
+  adults: number;
+  children: number;
+  infants: number;
+}
+
+class Search_Segment
+{
+  date: string | undefined; 
+  origin: string; 
+  destination: string; 
+}
+
+
 class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchStyle, ISimpleSearchState> {
   constructor(props: ISimpleSearchProps & ISimpleSearchStyle)
   {
@@ -56,6 +80,7 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
     this.handleSwapOriginAndDistination = this.handleSwapOriginAndDistination.bind(this);
     this.handleDepartureChange = this.handleDepartureChange.bind(this);
     this.handleArrivedChange = this.handleArrivedChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   };
 
   handleShowBackDate(){
@@ -90,6 +115,52 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
     this.setState({To: date});    
   }
 
+  handleSearch(){
+    //Запрос на локальный сервер обработки запросов
+    let url = `https://www.aviasales.com/adaptors/chains/rt_search_native_format`;
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onload = () => {
+        console.log(xhr.response);
+        if (xhr.status == 200) {
+          let autocompleteDataTemp = xhr.response;
+          console.log(autocompleteDataTemp);
+        }
+    };
+
+    //Формирование запросов
+    let request = new Search_RQ();
+    request.know_english = true;
+    request.currency = "rub"; //Нужно из меню использовать
+    let passengers = new Search_Passengers();
+    passengers.adults = 1;
+    passengers.children = 0;
+    passengers.infants = 0;
+    request.passengers = passengers;
+    let segments = new Search_Segment();
+
+    let month = '' + this.state.From?.getMonth();
+    let day = '' + this.state.From?.getDate();
+    let year = this.state.From?.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    let dateString = [year, month, day].join('-');
+
+    segments.date = dateString;
+    segments.origin = this.state.Origin.code;
+    segments.destination = this.state.Destination.code;
+    request.segments = new Array<Search_Segment>(segments);
+
+    console.log(request);
+    //Включить загрузку 
+    //Отправляем на локальный сервер
+    xhr.send(JSON.stringify(request));
+  }
+
   render(){
     const {classes} = this.props;
     return (
@@ -103,9 +174,11 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
               </Grid>
               {/*Switcher*/}                  
               <Grid item>
-                <Fab onClick={this.handleSwapOriginAndDistination} color="secondary" size="small" variant="round" className={classes.align}>
+                <IconButton onClick={this.handleSwapOriginAndDistination} color="secondary">
                   <SyncAltIcon/>
-                </Fab>
+                </IconButton>
+                {/* <Fab  className={classes.align}>
+                </Fab> */}
               </Grid>
               {/*Destination*/}                  
               <Grid item>
@@ -122,6 +195,10 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
               {/*Arrived date*/}           
               <Grid item>
                 <DateComponent minDate={this.state.From} onDateChange={this.handleArrivedChange} disable={!this.state.IsReturn} name="Обратно"></DateComponent>
+              </Grid>
+              {/*Search param*/}            
+              <Grid item>
+                <ParamsComponent></ParamsComponent>
               </Grid>
               {/*Show advanced search*/}            
               <Grid item>
@@ -144,7 +221,7 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
           <Grid item xs={4}>
             <Grid container justify="center" spacing={0} >
               <Grid item>
-                <Button color="secondary" variant="contained">Поиск</Button>
+                <Button onClick={this.handleSearch} color="secondary" variant="contained">Поиск</Button>
               </Grid>    </Grid>
           </Grid> 
         </Grid>

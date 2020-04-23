@@ -19,7 +19,8 @@ const common ={
                 {loader: 'style-loader', },
                 {loader: 'css-loader', },
             ]},
-            { test: /\.(png|svg|jpg|gif)$/, use: ["file-loader"]}          
+            { test: /\.svg$/, use: ['@svgr/webpack'] },     
+            { test: /\.(png|jpg|gif)$/, use: ["file-loader"]},
         ]
     },
     plugins: [
