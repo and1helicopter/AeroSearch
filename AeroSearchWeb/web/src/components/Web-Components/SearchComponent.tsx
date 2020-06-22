@@ -4,8 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import CityComponent from '../UI-Components/CityComponent';
 import DateComponent from '../UI-Components/DateComponent';
 import ParamsComponent from '../UI-components/ParamsComponent';
+import RadiusComponent from '../UI-Components/RadiusComponent';
 import { Grid, Button, Checkbox, AppBar, Collapse, IconButton } from '@material-ui/core';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
+import { string } from 'prop-types';
 
 const styles = () =>
   ({
@@ -210,8 +212,14 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
         {/*Advanced search*/}
         <Collapse in={this.state.IsAdvanced} >           
           {this.state.IsAdvanced ? 
-            <Grid item xs={12} >
-              <Grid container justify="center" spacing={0} >Сложный поиск</Grid>
+            <Grid item xs={12} >              
+              <Grid container justify="center" spacing={0} >
+                <Grid item xs={4}>
+                  <RadiusComponent radius={0} oneCity={true} cities={new Array(this.state.Origin)}></RadiusComponent>
+                </Grid>
+                <Grid item xs={4}> Прилет </Grid>
+                <Grid item xs={4}> Карта </Grid>
+              </Grid>
             </Grid> : null
           }
         </Collapse>       
