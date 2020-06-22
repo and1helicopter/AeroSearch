@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
 using AeroSearchREST.Models;
 using AeroSearchREST.JSON;
-using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 
 namespace AeroSearchREST.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SearchController : ControllerBase
+    public class SearchController : Controller
     {
         private readonly AeroSearchContext _context;
         private readonly IServiceRedisCache _memoryCache;
@@ -27,11 +25,21 @@ namespace AeroSearchREST.Controllers
             _memoryCache = memoryCache;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Get([FromQuery]SearchParam searchParam)
+        [HttpPost]
+        public async Task<JsonResult> Get([FromQuery]SearchParam searchParam)
         {
+            searchParam.segments = new SearchParam_Segment[]
+            {
+                new SearchParam_Segment()
+                {
+                    date = "2020-12-12",
+                    destination = "MOW",
+                    origin = "LED"
+                }
+            };
+
             var client = new RestClient("https://www.aviasales.com/adaptors/chains/rt_search_native_format");
-            var request = new RestRequest(Method.POST);
+            var request = new RestRequest(Method.POST);           
             request.AddHeader("Content-type", "application/json");
             request.AddJsonBody(
                 new
@@ -68,9 +76,7 @@ namespace AeroSearchREST.Controllers
                 }
             }
 
-
-
-            return new JsonResult(list);
+            return Json(list);
         }
 
         [HttpGet("tests")]

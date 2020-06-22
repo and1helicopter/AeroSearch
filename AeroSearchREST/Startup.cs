@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AeroSearchREST.Models;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 
 namespace AeroSearchREST
 {
@@ -21,7 +22,8 @@ namespace AeroSearchREST
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             services.AddDbContext<AeroSearchContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
