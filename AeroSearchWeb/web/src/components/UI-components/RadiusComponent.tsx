@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Switch, Slider, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
+import {Switch, Slider, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = () =>
@@ -9,12 +9,16 @@ const styles = () =>
       "align-items": "center",
       "margin-right": "35px",
       "margin-left": "35px"
-    }
+    },
+    paper: {
+      width: "100%",
+      "max-height": 230,
+      overflow: 'auto'
+    },
   });
 
 interface IRadiusComponentProps {
-  oneCity: boolean;  
-  radius: number;
+  city: any;
   cities: any;
 }
 
@@ -23,9 +27,23 @@ interface IRadiusComponentStyle {
 }
 
 interface IRadiusComponentState {
-    value: number;
-    autocompleteData: any;
+  oneCity: boolean;  
+  value: number;
+  radius: number;  
+  autocompleteData: Array<City>;
 }
+
+class City{
+  code: string; 
+  latitude: number;
+  longitude: number;
+
+  constructor(code:string, latitude:number, longitude:number) { 
+      this.code = code,
+      this.latitude = latitude,
+      this.latitude = longitude
+  }  
+} 
 
 const axios = require('axios').default;
 
@@ -50,27 +68,26 @@ class RadiusComponent extends React.Component<IRadiusComponentProps & IRadiusCom
     super(props);
     
     this.state = {
-      value: 0,
-      autocompleteData: []
+      oneCity: false,
+      value: 0,     
+      radius: 0,
+      autocompleteData: new Array()
     }
     
     this.valueLabelFormat = this.valueLabelFormat.bind(this);
     this.onChange = this.onChange.bind(this);
-
-    this.retrieveDataAsynchronously = this.retrieveDataAsynchronously.bind(this);
   }
 
-  retrieveDataAsynchronously(searchText: string){
-    axios.get(`http://autocomplete.travelpayouts.com/places2?term=${searchText}&locale=${this.props}`)
+  onChange(event: any, newValue: number){
+    axios.post(`http://localhost:44360/api/Radius/City?IATA=${this.props.city.code}&Radius=${newValue}`)
       .then((response: any) => {
-        let autocompleteDataTemp = response.data.map((item: any) => {return  {code: item.code, name:item.name}});
+        console.log(response)
+
+        let autocompleteDataTemp = response.data.map((item: any) => new City(item.code, item.position.latitude, item.position.longitude));   
+
         this.setState({autocompleteData: autocompleteDataTemp});
       });
-  };
 
-  onChange(event: any, newValue: number){
-    this.setState({value: newValue});
-    console.log(newValue)
     //search cities
     
   };
@@ -97,11 +114,12 @@ class RadiusComponent extends React.Component<IRadiusComponentProps & IRadiusCom
                 marks={marks}
                 />
           </div>
-          <List dense>
-                {[0, 1].map((value) => {
+          <Paper className={classes.paper}>
+            <List dense>
+                {this.state.autocompleteData.map((value) => {
                   return (
-                    <ListItem key={value} button>
-                      <ListItemText primary={`Line item ${value + 1}`}/>
+                    <ListItem key={value.code} button>
+                      <ListItemText primary={`${value.code}`}/>
                       <ListItemSecondaryAction>
                         <Checkbox
                           edge="end"
@@ -112,6 +130,7 @@ class RadiusComponent extends React.Component<IRadiusComponentProps & IRadiusCom
                       </ListItemSecondaryAction>
                     </ListItem>)})}
             </List>
+          </Paper>
         </div>
     );
   }
