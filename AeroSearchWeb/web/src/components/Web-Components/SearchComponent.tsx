@@ -215,9 +215,11 @@ class SimpleSearch extends React.Component<ISimpleSearchProps & ISimpleSearchSty
             <Grid item xs={12} >              
               <Grid container justify="center" spacing={0} >
                 <Grid item xs={4}>
-                  <RadiusComponent radius={0} oneCity={true} cities={new Array(this.state.Origin)}></RadiusComponent>
+                  <RadiusComponent city={this.state.Origin} cities={new Array()}></RadiusComponent>
                 </Grid>
-                <Grid item xs={4}> Прилет </Grid>
+                <Grid item xs={4}> 
+                  <RadiusComponent city={this.state.Destination} cities={new Array()}></RadiusComponent>
+                </Grid>
                 <Grid item xs={4}> Карта </Grid>
               </Grid>
             </Grid> : null
