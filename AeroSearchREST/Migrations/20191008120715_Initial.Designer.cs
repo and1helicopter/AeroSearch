@@ -8,7 +8,7 @@ using AeroSearchREST.Models;
 
 namespace AeroSearchREST.Migrations
 {
-    [DbContext(typeof(WebAppContext))]
+    [DbContext(typeof(AeroSearchContext))]
     [Migration("20191008120715_Initial")]
     partial class Initial
     {

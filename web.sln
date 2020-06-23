@@ -9,6 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AeroSearchREST_NUnitTest", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AeroSearchREST", "AeroSearchREST", "{D72E4BAC-4129-4BF4-9841-15F9585DDB74}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Site", "Site", "{115AE910-67CC-4D25-9F8F-1386ACB2D829}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SiteAeroSearch", "SiteAeroSearch\SiteAeroSearch.csproj", "{BC416CC8-622B-4940-BE09-515B3E066164}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AeroSearchWeb", "AeroSearchWeb\AeroSearchWeb.csproj", "{51958C92-8F91-479E-98C9-CEAED48457EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +29,14 @@ Global
 		{AFA0C3D9-EF59-4210-8577-83CA09630A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA0C3D9-EF59-4210-8577-83CA09630A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFA0C3D9-EF59-4210-8577-83CA09630A4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC416CC8-622B-4940-BE09-515B3E066164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC416CC8-622B-4940-BE09-515B3E066164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC416CC8-622B-4940-BE09-515B3E066164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC416CC8-622B-4940-BE09-515B3E066164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51958C92-8F91-479E-98C9-CEAED48457EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51958C92-8F91-479E-98C9-CEAED48457EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51958C92-8F91-479E-98C9-CEAED48457EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51958C92-8F91-479E-98C9-CEAED48457EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +44,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{072203C0-D387-4AAF-9B4B-6A49FB8E17FC} = {D72E4BAC-4129-4BF4-9841-15F9585DDB74}
 		{AFA0C3D9-EF59-4210-8577-83CA09630A4B} = {D72E4BAC-4129-4BF4-9841-15F9585DDB74}
+		{BC416CC8-622B-4940-BE09-515B3E066164} = {115AE910-67CC-4D25-9F8F-1386ACB2D829}
+		{51958C92-8F91-479E-98C9-CEAED48457EB} = {115AE910-67CC-4D25-9F8F-1386ACB2D829}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C7025632-55F9-4C47-BA68-E63501F34734}

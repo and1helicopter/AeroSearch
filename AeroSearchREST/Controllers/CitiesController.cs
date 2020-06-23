@@ -12,9 +12,9 @@ namespace AeroSearchREST.Controllers
     [ApiController]
     public class CitiesController : ControllerBase
     {
-        private readonly WebAppContext _context;
+        private readonly AeroSearchContext _context;
 
-        public CitiesController(WebAppContext context)
+        public CitiesController(AeroSearchContext context)
         {
             _context = context;
         }
