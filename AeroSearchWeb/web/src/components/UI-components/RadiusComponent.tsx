@@ -1,26 +1,14 @@
 import * as React from 'react';
-import {Switch, Slider  } from '@material-ui/core';
+import {Switch, Slider, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = () =>
   ({
-    // textField: { 
-    //   // '& .MuiInputBase-root': {
-    //   //   color: "white"
-    //   // }   
-    // },
-    autocomplete: {
-      width: 300,
-      marginLeft: 8,
-      marginRight: 8,
-    },
-    formControl: {
-      width: "100%"
-    },
-    formHelperText:{
-      // color: "white",
-      paddingLeft: "5%",
-      margin: 4
+    grid: {
+      margin: 10,
+      "align-items": "center",
+      "margin-right": "35px",
+      "margin-left": "35px"
     }
   });
 
@@ -94,9 +82,11 @@ class RadiusComponent extends React.Component<IRadiusComponentProps & IRadiusCom
   render(){
     const {classes} = this.props;
     return (
-        <div>
+        <div className={classes.grid}>
+          <div>
             <Switch>Many cities</Switch>
             <Slider   
+                defaultValue={0}
                 min={0}
                 max={1000}   
                 step={10}         
@@ -106,6 +96,22 @@ class RadiusComponent extends React.Component<IRadiusComponentProps & IRadiusCom
                 onChange={this.onChange}
                 marks={marks}
                 />
+          </div>
+          <List dense>
+                {[0, 1].map((value) => {
+                  return (
+                    <ListItem key={value} button>
+                      <ListItemText primary={`Line item ${value + 1}`}/>
+                      <ListItemSecondaryAction>
+                        <Checkbox
+                          edge="end"
+                          // onChange={handleToggle(value)}
+                          // checked={checked.indexOf(value) !== -1}
+                          // inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>)})}
+            </List>
         </div>
     );
   }
