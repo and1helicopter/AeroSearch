@@ -1,5 +1,6 @@
 ﻿using AeroSearchREST.Models;
 using AeroSearchREST.Models.Data;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 using System.Linq;
@@ -19,10 +20,14 @@ namespace AeroSearchREST.Controllers
             _memoryCache = memoryCache;
         }
 
+        [EnableCors("myAllowSpecificOrigins")]
         [HttpPost("City")]
-        public JsonResult GetCitiesByRadius(string cityCode, int radius)
+        public JsonResult GetCitiesByRadius(string IATA, int Radius)
         {
-            var cities = _memoryCache.Cache.GeoRadius("cities", cityCode.ToUpper(), radius, GeoUnit.Kilometers)
+            if (string.IsNullOrEmpty(IATA))
+                return Json("empty");          
+
+            var cities = _memoryCache.Cache.GeoRadius("cities", IATA.ToUpper(), Radius, GeoUnit.Kilometers)
                 .Select(_city => new Radius_Item()
                 {
                     Code = _city.Member.ToString(),

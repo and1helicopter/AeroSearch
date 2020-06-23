@@ -17,18 +17,25 @@ namespace AeroSearchREST
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "myAllowSpecificOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options =>
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddControllers();
 
-            services.AddDbContext<AeroSearchContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
-
+            services.AddDbContext<AeroSearchContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
             services.AddSingleton<IServiceRedisCache>(new ServiceRedisCache(Configuration.GetConnectionString("RedisHost")));
+            services.AddCors(options => 
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:9001").AllowAnyHeader().AllowAnyMethod();
+                    });
+            });
 
             //services.AddDistributedRedisCache(option =>
             //    {
@@ -55,6 +62,7 @@ namespace AeroSearchREST
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -66,6 +74,8 @@ namespace AeroSearchREST
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 
