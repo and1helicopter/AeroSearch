@@ -5,11 +5,11 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = () =>
   ({
-    textField: { 
-      '& .MuiInputBase-root': {
-        color: "white"
-      }   
-    },
+    // textField: { 
+    //   // '& .MuiInputBase-root': {
+    //   //   color: "white"
+    //   // }   
+    // },
     autocomplete: {
       width: 300,
       marginLeft: 8,
@@ -19,7 +19,7 @@ const styles = () =>
       width: "100%"
     },
     formHelperText:{
-      color: "white",
+      // color: "white",
       paddingLeft: "5%",
       margin: 4
     }
@@ -46,6 +46,8 @@ interface IPlace{
   code: string;
 }
 
+const axios = require('axios').default;
+
 class CityComponent extends React.Component<ICityComponentProps & ICityComponentStyle, ICityComponentState> {
   constructor(props: ICityComponentProps & ICityComponentStyle)
   {
@@ -62,17 +64,11 @@ class CityComponent extends React.Component<ICityComponentProps & ICityComponent
   }
 
   retrieveDataAsynchronously(searchText: string){
-    let url = `http://autocomplete.travelpayouts.com/places2?term=${searchText}&locale=${this.props.lang}`;
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'json';
-    xhr.onload = () => {
-        if (xhr.status == 200) {
-          let autocompleteDataTemp = xhr.response.map((item: any) => {return  {code: item.code, name:item.name}});
-          this.setState({autocompleteData: autocompleteDataTemp});
-        }
-    };
-    xhr.send();
+    axios.get(`http://autocomplete.travelpayouts.com/places2?term=${searchText}&locale=${this.props.lang}`)
+      .then((response: any) => {
+        let autocompleteDataTemp = response.data.map((item: any) => {return  {code: item.code, name:item.name}});
+        this.setState({autocompleteData: autocompleteDataTemp});
+      });
   };
 
   onChange(e: any){

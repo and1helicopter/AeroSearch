@@ -1,8 +1,9 @@
 import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import SimpleSearch from './SimpleSearch';
 import { Box, Typography,  useScrollTrigger, Zoom,  Grid,   } from '@material-ui/core';
-import MenuComponent from './UI-components/MenuComponent';
+import MenuComponent from './Web-Components/MenuComponent';
+import SelectBarComponent from './Web-Components/SelectComponent';
+import SearchComponent from './Web-Components/SearchComponent';
 
 const styles = () =>
   ({
@@ -51,25 +52,17 @@ class ContentLayout extends React.Component<IContentLayoutProps & IContentLayout
       <Grid item>
         <MenuComponent></MenuComponent>
       </Grid>
-      {/*Select bar */}
-      <Grid item>
-
-      </Grid>
       {/*Search bar */}
       <Grid item>
-        <Box>
-          <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
-            <TabPanel value={value} index={0}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              <SimpleSearch></SimpleSearch>
-            </TabPanel>
-          </SwipeableViews>
-        </Box>
+        <SearchComponent></SearchComponent>
+      </Grid>
+      {/*Select bar */}
+      <Grid item>
+        <SelectBarComponent></SelectBarComponent>
+      </Grid>
+
+      {/* Results */}
+      <Grid item>
       </Grid>
     </Grid>
   );

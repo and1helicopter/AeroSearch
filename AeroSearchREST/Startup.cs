@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AeroSearchREST.Models;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 
 namespace AeroSearchREST
 {
@@ -16,6 +17,8 @@ namespace AeroSearchREST
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "myAllowSpecificOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -23,14 +26,23 @@ namespace AeroSearchREST
         {
             services.AddControllers();
 
-            //Подключение БД
-            services.AddDbContext<AeroSearchContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
-
-            //Подключаем рэдис
+            services.AddDbContext<AeroSearchContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionDB")));
             services.AddSingleton<IServiceRedisCache>(new ServiceRedisCache(Configuration.GetConnectionString("RedisHost")));
+            services.AddCors(options => 
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:9001").AllowAnyHeader().AllowAnyMethod();
+                    });
+            });
 
-            //Подключение свагера
+            //services.AddDistributedRedisCache(option =>
+            //    {
+            //        option.Configuration = Configuration.GetConnectionString("RedisHost");
+            //        option.InstanceName = Configuration.GetConnectionString("RedisInstance");                           
+            //    });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AeroSearch API", Version = "v1" });
@@ -50,6 +62,7 @@ namespace AeroSearchREST
                 app.UseDeveloperExceptionPage();
             }
 
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -62,13 +75,19 @@ namespace AeroSearchREST
 
             app.UseRouting();
 
-            app.UseAuthentication();    // аутентификация
-            app.UseAuthorization();     // авторизация
+            app.UseCors(MyAllowSpecificOrigins);
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });            
+        }
+
+        public void Initialize()
+        {
+
         }
     }
 }
