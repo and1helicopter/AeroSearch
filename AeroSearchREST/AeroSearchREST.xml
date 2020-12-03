@@ -49,17 +49,9 @@
             <param name="airoportCode">code of the airport</param>
             <param name="radius">searching radius</param>
             <returns>array airport codes</returns>
-            <response code="200"> </response>  
-            <response code="400">
-            <remarks>
-            {
-             "status": "400",
-             "text": "400 Bad Request",
-             "result": null      
-            }
-            </remarks>
-            </response>  
-            <response code="404"></response> 
+            <response code="200">200 OK</response>  
+            <response code="400">400 Bad Request</response>  
+            <response code="404">404 Not Found</response> 
         </member>
         <member name="M:AeroSearchREST.Controllers.RadiusController.GetArrayAiroportsByRadius(System.String,System.Double)">
             <summary>
@@ -74,7 +66,7 @@
         </member>
         <member name="T:AeroSearchREST.Models.Data.RadiusResult`1">
             <summary>
-            result of request radus
+            result of request radius
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -90,7 +82,7 @@
         </member>
         <member name="P:AeroSearchREST.Models.Data.RadiusResult`1.Result">
             <summary>
-            ressult
+            result
             </summary>
         </member>
         <member name="T:AeroSearchREST.Models.Data.RadiusItem">
@@ -133,12 +125,12 @@
             Name of airport
             </summary>
         </member>
-        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.RUS">
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.Rus">
             <summary>
             Name of airport by russian
             </summary>
         </member>
-        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.ENG">
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.Eng">
             <summary>
             Name of airport by english
             </summary>
