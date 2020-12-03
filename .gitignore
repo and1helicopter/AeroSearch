@@ -3,3 +3,6 @@ bin
 .vs
 AeroSearchWeb/web/node_modules
 .idea
+.idea
+AeroSearchWeb/web/build
+AeroSearchWeb/web/yarn-error.log

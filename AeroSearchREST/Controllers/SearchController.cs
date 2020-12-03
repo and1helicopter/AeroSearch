@@ -1,37 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using RestSharp;
-using AeroSearchREST.Models;
 using AeroSearchREST.JSON;
-using Microsoft.Extensions.Caching.Distributed;
-using StackExchange.Redis;
 
 namespace AeroSearchREST.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SearchController : ControllerBase
+    public class SearchController : Controller
     {
-        private readonly AeroSearchContext _context;
-        private readonly IServiceRedisCache _memoryCache;
+        private readonly IRedisCacheService _memoryCache;
 
-        public SearchController(AeroSearchContext context, IServiceRedisCache memoryCache)
+        public SearchController(IRedisCacheService memoryCache)
         {
-            _context = context;
             _memoryCache = memoryCache;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Get([FromQuery]SearchParam searchParam)
+        [HttpPost]
+        public async Task<JsonResult> Get([FromQuery]SearchParam searchParam)
         {
+            searchParam.segments = new SearchParam_Segment[]
+            {
+                new SearchParam_Segment()
+                {
+                    date = "2020-12-12",
+                    destination = "MOW",
+                    origin = "LED"
+                }
+            };
+
             var client = new RestClient("https://www.aviasales.com/adaptors/chains/rt_search_native_format");
-            var request = new RestRequest(Method.POST);
+            var request = new RestRequest(Method.POST);           
             request.AddHeader("Content-type", "application/json");
             request.AddJsonBody(
                 new
@@ -68,29 +70,28 @@ namespace AeroSearchREST.Controllers
                 }
             }
 
-
-
-            return new JsonResult(list);
+            return Json(list);
         }
 
-        [HttpGet("tests")]
-        public async Task<ActionResult> Tests([FromQuery]SearchParam searchParam)
-        {
-            var city = _context.City.FirstOrDefault(_city => _city.Code == searchParam.segments[0].origin);
+        //[HttpGet("tests")]
+        //public async Task<ActionResult> Tests([FromQuery]SearchParam searchParam)
+        //{
+        //    var city = _memoryCache.Cache.
+        //        _context.City.FirstOrDefault(_city => _city.Code == searchParam.segments[0].origin);
 
-            var airports = await _context.Airport.Where(_airport => _airport.CityCode == city.Code).ToListAsync();
+        //    var airports = await _context.Airport.Where(_airport => _airport.CityCode == city.Code).ToListAsync();
 
-            foreach (var airport in airports)
-            {
-                var temp = _memoryCache.Cache.GeoRadius(airport.Code, airport.Longitude, airport.Latitude, 350, GeoUnit.Kilometers).ToList();
+        //    foreach (var airport in airports)
+        //    {
+        //        var temp = _memoryCache.Cache.GeoRadius(airport.Code, airport.Longitude, airport.Latitude, 350, GeoUnit.Kilometers).ToList();
 
-            }
+        //    }
 
-            //var geo = new GeoCoordinate(origin.Latitude, origin.Longitude);
+        //    //var geo = new GeoCoordinate(origin.Latitude, origin.Longitude);
 
-            //var list = cities.Where(_city => IsInsideRadius(geo, new GeoCoordinate(_city.Latitude, _city.Longitude), 350 * 1000)).ToList();
-            return new JsonResult("");
-        }
+        //    //var list = cities.Where(_city => IsInsideRadius(geo, new GeoCoordinate(_city.Latitude, _city.Longitude), 350 * 1000)).ToList();
+        //    return new JsonResult("");
+        //}
 
         private class SearchResponse
         {

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import {  MuiPickersUtilsProvider,  KeyboardDatePicker} from '@material-ui/pickers';
-import { withStyles } from '@material-ui/core/styles';
-import { Grid, FormControl, FormHelperText } from '@material-ui/core';
+import {MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
+import withStyles from '@material-ui/core/styles/withStyles';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 const styles = () =>
@@ -11,9 +13,9 @@ const styles = () =>
       width: 300,
       marginLeft: 8,
       marginRight: 8,
-      '& .MuiInputBase-root': {
-        color: "#ffffff"
-      }   
+      // '& .MuiInputBase-root': {
+      //   color: "#ffffff"
+      // }   
     },
     keyboardDatePickerOff: { 
       width: 300,
@@ -24,7 +26,7 @@ const styles = () =>
       }   
     },
     formHelperText:{
-      color: "white",
+      // color: "white",
       paddingLeft: "5%",
       margin: 4,
     }

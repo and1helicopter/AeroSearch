@@ -1,16 +1,17 @@
 import * as React from "react";
-import { Route, BrowserRouter}  from "react-router-dom"; 
-import MainLayout from "./MainLayout";
+import { Route, BrowserRouter }  from "react-router-dom"; 
+//import MainLayout from "./MainLayout";
 import ContentLayout from "./ContentLayout";
-import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import theme from '../themes/theme';
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
+
 
 const styles = {
-    root: {
-        height: "500px",
-        background: "#cfd8dc"
-    }, 
+    // root: {
+    //     height: "500px",
+    //     background: "#cfd8dc"
+    // }, 
 };
 
 const mapStateToProps = (store: any) => ({app: store.app})

@@ -1,139 +1,98 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace AeroSearchREST.JSON
 {
     public class SearchAeroRS
     {
         [JsonProperty("proposals", Required = Required.Default)]
-        public SearchAeroRS_Proposal[] Proposals;
+        public SearchAeroRS_Proposal[] Proposals { get; set; }
 
         [JsonProperty("search_id", Required = Required.Default)]
-        public string SearchId;
+        public string SearchId { get; set; }
 
         [JsonProperty("gates_info", Required = Required.Default)]
-        public SearchAeroRS_GatesInfo GatesInfo;
-
-        [JsonProperty("airports", Required = Required.Default)]
-        public SearchAeroRS_Airports Airports;
+        public SearchAeroRS_GatesInfo GatesInfo { get; set; }
     }
 
     public class SearchAeroRS_Proposal
     {
         [JsonProperty("terms", Required = Required.Default)]
-        public SearchAeroRS_Proposal_Terms Terms;
+        public SearchAeroRS_Proposal_Terms Terms { get; set; }
 
         [JsonProperty("validating_carrier", Required = Required.Default)]
-        public string ValidatingCarrier;
+        public string ValidatingCarrier { get; set; }
 
         [JsonProperty("segment", Required = Required.Default)]
-        public SearchAeroRS_Proposal_Segment[] Segment;
+        public SearchAeroRS_Proposal_Segment[] Segment { get; set; }
     }
 
     public class SearchAeroRS_Proposal_Terms
     {
-      //  [JsonConverter(typeof(SearchAeroRS_Proposal_Terms_Price_Converter))]
-        [JsonExtensionData]
-        public Dictionary<string, JToken> Variables;
-    }  
+        [JsonProperty("16", Required = Required.Default)]
+        public SearchAeroRS_Proposal_Terms_Price Price { get; set; }
+    }
 
     public class SearchAeroRS_Proposal_Terms_Price
     {
         [JsonProperty("currency", Required = Required.Default)]
-        public string Currency;
+        public string Currency { get; set; }
 
         [JsonProperty("price", Required = Required.Default)]
-        public int Price;
+        public int Price { get; set; }
     }
 
     public class SearchAeroRS_Proposal_Segment
     {
         [JsonProperty("flight", Required = Required.Default)]
-        public SearchAeroRS_Proposal_Segment_Flight[] Flights;
+        public SearchAeroRS_Proposal_Segment_Flight[] Flights { get; set; }
     }
 
     public class SearchAeroRS_Proposal_Segment_Flight
     {
         [JsonProperty("aircraft", Required = Required.Default)]
-        public string Aircraft;
+        public string Aircraft { get; set; }
 
         [JsonProperty("arrival", Required = Required.Default)]
-        public string Arrival;
+        public string Arrival { get; set; }
 
         [JsonProperty("arrival_date", Required = Required.Default)]
-        public DateTime ArrivalDate;
+        public DateTime ArrivalDate { get; set; }
 
         [JsonProperty("arrival_time", Required = Required.Default)]
-        public DateTime ArrivalTime;
+        public DateTime arrivalTime { get; set; }
 
         [JsonProperty("delay", Required = Required.Default)]
-        public int Delay;
+        public int Delay { get; set; }
 
         [JsonProperty("departure", Required = Required.Default)]
-        public string Departure;
+        public string Departure { get; set; }
 
         [JsonProperty("departure_date", Required = Required.Default)]
-        public DateTime DepartureDate;
+        public DateTime DepartureDate { get; set; }
 
         [JsonProperty("departure_time", Required = Required.Default)]
-        public DateTime DepartureTime;
+        public DateTime DepartureTime { get; set; }
 
         [JsonProperty("duration", Required = Required.Default)]
-        public int Duration;
-
-        [JsonProperty("operating_carrier", Required = Required.Default)]
-        public string Carrier;
+        public int Duration { get; set; }
 
         [JsonProperty("number", Required = Required.Default)]
-        public string Number;
+        public string Number { get; set; }
 
         [JsonProperty("trip_class", Required = Required.Default)]
-        public string TripClass;
+        public string TripClass { get; set; }
     }
 
     public class SearchAeroRS_GatesInfo
     {
-        [JsonExtensionData]
-        public Dictionary<string, JToken> Site;
+        [JsonProperty("16", Required = Required.Default)]
+        public SearchAeroRS_GatesInfo_Site Site { get; set; }
     }
 
     public class SearchAeroRS_GatesInfo_Site
     {
         [JsonProperty("site", Required = Required.Default)]
-        public string Site;
-    }
-
-    public class SearchAeroRS_Airports
-    {
-        [JsonExtensionData]
-        public Dictionary<string, JToken> Airports;
-    }
-
-    public class SearchAeroRS_Airports_Airport 
-    {
-        [JsonProperty("name", Required = Required.Default)]
-        public int Name;
-
-        [JsonProperty("city", Required = Required.Default)]
-        public string City;
-
-        [JsonProperty("country", Required = Required.Default)]
-        public string Country;
-
-        [JsonProperty("time_zone", Required = Required.Default)]
-        public string TimeZone;
-
-
-        //[JsonProperty("country", Required = Required.Default)]
-        //public double Country;
-
-
-        //[JsonProperty("country", Required = Required.Default)]
-        //public double Country;
+        public string Site { get; set; }
     }
 }
