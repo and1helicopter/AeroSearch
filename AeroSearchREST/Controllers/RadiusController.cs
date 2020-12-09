@@ -1,6 +1,4 @@
-﻿using System;
-using AeroSearchREST.Common;
-using AeroSearchREST.Models;
+﻿using AeroSearchREST.Common;
 using AeroSearchREST.Models.Data;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -29,30 +27,61 @@ namespace AeroSearchREST.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Method will return array cities codes within the radius of the city code (Search only from cities).
         /// </summary>
-        /// <param name="IATA"></param>
-        /// <param name="Radius"></param>
-        /// <returns></returns>
+        /// <param name="cityCode">code of the city</param>
+        /// <param name="radius">searching radius</param>
+        /// <returns>array city codes</returns>
+        /// <response code="200">200 OK</response>  
+        /// <response code="400">400 Bad Request</response>  
+        /// <response code="404">404 Not Found</response> 
         [EnableCors("myAllowSpecificOrigins")]
+        [ProducesResponseType(typeof(RadiusResult<RadiusItem>), 200)]
+        [ProducesResponseType(typeof(RadiusResult<object>), 400)]
+        [ProducesResponseType(typeof(RadiusResult<object>), 404)]
         [HttpPost("City")]
-        public JsonResult GetCitiesByRadius(string IATA, int Radius)
+        public JsonResult GetCitiesByRadius(string cityCode, int radius)
         {
-            if (string.IsNullOrEmpty(IATA))
-                return Json("empty");          
+            var result = new RadiusResult<RadiusItem>();
 
-            var cities = _memoryCache.Cache.GeoRadius("cities", IATA.ToUpper(), Radius, GeoUnit.Kilometers)
-                .Select(_city => new RadiusItem()
-                {
-                    Code = _city.Member.ToString(),
-                    Position = new RadiusItemPosition()
+            try
+            {
+                var cities = _memoryCache.CacheDb0.GeoRadius("cities", cityCode.ToUpper(), radius, GeoUnit.Kilometers)
+                    .Select(_city => new RadiusItem()
                     {
-                        Latitude = _city.Position.Value.Latitude,
-                        Longitude = _city.Position.Value.Longitude
-                    }
-                }).ToList();
+                        Code = _city.Member.ToString(),
+                        Name = new RadiusItemName()
+                        {
+                            Eng = _memoryCache.CacheDb0.HashGet("citiesEN", _city.Member.ToString()).ToString(),
+                            Rus = _memoryCache.CacheDb0.HashGet("citiesRU", _city.Member.ToString()).ToString()
+                        },
+                        Position = new RadiusItemPosition()
+                        {
+                            Latitude = _city.Position.Value.Latitude,
+                            Longitude = _city.Position.Value.Longitude
+                        }
+                    }).ToList();
 
-            return Json(cities);
+                if (cities.IsNullOrEmpty())
+                {
+                    result.Status = "404";
+                    result.Text = "404 Not Found";
+                }
+                else
+                {
+                    result.Status = "200";
+                    result.Text = "200 OK";
+                    result.Result = cities;
+                }
+
+                return Json(result);
+            }
+            catch (System.Exception)
+            {
+                result.Status = "400";
+                result.Text = "400 Bad Request";
+                return Json(result);
+            }
         }
 
         /// <summary>
@@ -75,14 +104,14 @@ namespace AeroSearchREST.Controllers
 
             try
             {
-                 var airports = _memoryCache.Cache.GeoRadius("airports", airoportCode.ToUpper(), radius, GeoUnit.Kilometers)
+                 var airports = _memoryCache.CacheDb0.GeoRadius("airports", airoportCode.ToUpper(), radius, GeoUnit.Kilometers)
                     .Select(_airoport => new RadiusItem()
                     {
                         Code = _airoport.Member.ToString(),
                         Name = new RadiusItemName()
                         {
-                            Eng = _memoryCache.Cache.HashGet("airportsEN", _airoport.Member.ToString()).ToString(),
-                            Rus = _memoryCache.Cache.HashGet("airportsRU", _airoport.Member.ToString()).ToString()
+                            Eng = _memoryCache.CacheDb0.HashGet("airportsEN", _airoport.Member.ToString()).ToString(),
+                            Rus = _memoryCache.CacheDb0.HashGet("airportsRU", _airoport.Member.ToString()).ToString()
                         },
                         Position = new RadiusItemPosition()
                         {
@@ -129,44 +158,76 @@ namespace AeroSearchREST.Controllers
         [HttpPost("")]
         public JsonResult GetArrayAiroportsByRadius(string code, double radius)
         {
-            var airport = _memoryCache.Cache.GeoPosition("airports", code);
-            double? lon = null;
-            double? lat = null;
+            var result = new RadiusResult<RadiusItem>();
 
-            if(airport == null)
+            try
             {
-                var city = _memoryCache.Cache.GeoPosition("cities", code);
+                var airportCode = string.Empty;
 
-                if(city != null)
+                var airport = _memoryCache.CacheDb0.GeoPosition("airports", code);
+
+                if (airport == null)
                 {
-                    lon = city.Value.Longitude;
-                    lat = city.Value.Latitude;
+                    var city = _memoryCache.CacheDb0.GeoPosition("cities", code);
+
+                    if (city != null)
+                    {
+                        var airoports = _memoryCache.CacheDb1.SetMembers(code);
+
+                        if (airoports.Any())
+                        {
+                            airportCode = airoports.FirstOrDefault();
+                        }
+                    }
                 }
+                else
+                {
+                    airportCode = code;
+                }
+
+                if (string.IsNullOrEmpty(airportCode))
+                {
+                    result.Status = "404";
+                    result.Text = "404 Not Found";
+                    return Json(result);
+                }
+
+                var airports = _memoryCache.CacheDb0.GeoRadius("airports", airportCode, radius, GeoUnit.Kilometers)
+                   .Select(_airoport => new RadiusItem()
+                   {
+                       Code = _airoport.Member.ToString(),
+                       Name = new RadiusItemName()
+                       {
+                           Eng = _memoryCache.CacheDb0.HashGet("airportsEN", _airoport.Member.ToString()).ToString(),
+                           Rus = _memoryCache.CacheDb0.HashGet("airportsRU", _airoport.Member.ToString()).ToString()
+                       },
+                       Position = new RadiusItemPosition()
+                       {
+                           Latitude = _airoport.Position.Value.Latitude,
+                           Longitude = _airoport.Position.Value.Longitude
+                       }
+                   }).ToList();
+
+                if (airports.IsNullOrEmpty())
+                {
+                    result.Status = "404";
+                    result.Text = "404 Not Found";
+                }
+                else
+                {
+                    result.Status = "200";
+                    result.Text = "200 OK";
+                    result.Result = airports;
+                }
+
+                return Json(result);
             }
-            else
+            catch (System.Exception)
             {
-                lon = airport.Value.Longitude;
-                lat = airport.Value.Latitude;
+                result.Status = "400";
+                result.Text = "400 Bad Request";
+                return Json(result);
             }
-
-            if(lat == null || lon == null)
-            {
-                return Json(new { Status = "404", Text = "404 Not Found" });
-            }
-
-            //var airports = _memoryCache.Cache.GeoPosition("airports", new RedisValue() , radius, GeoUnit.Kilometers)
-            //    .Select(_airoport => new Radius_Item()
-            //    {
-            //        Code = _airoport.Member.ToString(),
-            //        Position = new Radius_Item_Position()
-            //        {
-            //            Latitude = _airoport.Position.Value.Latitude,
-            //            Longitude = _airoport.Position.Value.Longitude
-            //        }
-            //    }).ToList();
-
-
-            return Json(new { Status = "200", Text = "200 OK" });
         }
     }
 }

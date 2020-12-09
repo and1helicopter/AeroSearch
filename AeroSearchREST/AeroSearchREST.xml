@@ -36,11 +36,14 @@
         </member>
         <member name="M:AeroSearchREST.Controllers.RadiusController.GetCitiesByRadius(System.String,System.Int32)">
             <summary>
-            
+            Method will return array cities codes within the radius of the city code (Search only from cities).
             </summary>
-            <param name="IATA"></param>
-            <param name="Radius"></param>
-            <returns></returns>
+            <param name="cityCode">code of the city</param>
+            <param name="radius">searching radius</param>
+            <returns>array city codes</returns>
+            <response code="200">200 OK</response>  
+            <response code="400">400 Bad Request</response>  
+            <response code="404">404 Not Found</response> 
         </member>
         <member name="M:AeroSearchREST.Controllers.RadiusController.GetAiroportsByRadius(System.String,System.Int32)">
             <summary>

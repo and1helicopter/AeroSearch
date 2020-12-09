@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System;
 using System.Reflection;
+using Serilog;
 
 namespace AeroSearchREST
 {
@@ -87,6 +88,8 @@ namespace AeroSearchREST
                     c.RoutePrefix = string.Empty;
                 });
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 

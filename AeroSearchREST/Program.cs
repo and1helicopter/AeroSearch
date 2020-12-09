@@ -8,6 +8,7 @@ using Serilog.Sinks.RabbitMQ;
 using Serilog.Sinks.RabbitMQ.Sinks.RabbitMQ;
 using Serilog.Formatting.Json;
 using System;
+using Serilog.Events;
 
 namespace AeroSearchREST
 {
@@ -45,9 +46,12 @@ namespace AeroSearchREST
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .Enrich.WithMachineName()
-                .WriteTo.RabbitMQ(config, sinkConfiguration)
                 .Enrich.WithProperty("Environment", environment)
-                .MinimumLevel.Verbose()
+                //.MinimumLevel.Debug()
+                //.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .WriteTo.Console()
+                .WriteTo.RabbitMQ(config, sinkConfiguration)
                 .CreateLogger();
 
             try
