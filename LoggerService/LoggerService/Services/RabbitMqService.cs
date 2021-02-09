@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Serilog;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace LoggerService.Services
         public RabbitMqService(IOptions<RabbitMqConfiguration> rabbitMqOptions)
         {
             _hostName = rabbitMqOptions.Value.HostName;
-           // _queueName = rabbitMqOptions.Value.QueueName;
+            _queueName = rabbitMqOptions.Value.QueueName;
             _userName = rabbitMqOptions.Value.UserName;
             _password = rabbitMqOptions.Value.Password;
             _exchangeName = rabbitMqOptions.Value.ExchangeName;
@@ -47,9 +48,8 @@ namespace LoggerService.Services
             _channel = _connection.CreateModel();
 
             _channel.ExchangeDeclare(exchange: _exchangeName, type: ExchangeType.Direct);
-            _queueName = _channel.QueueDeclare().QueueName;
 
-            _channel.QueueBind(queue: _queueName, exchange: _exchangeName, routingKey: "log");
+            _channel.QueueBind(queue: _queueName, exchange: _exchangeName, routingKey: "logs");
 
         }
 
@@ -66,8 +66,8 @@ namespace LoggerService.Services
                 //var updateCustomerFullNameModel = JsonConvert.DeserializeObject<UpdateCustomerFullNameModel>(content);
                 //HandleMessage(updateCustomerFullNameModel);
 
-                //Запись в ElasticSearch
-                //Log.Information();
+                //Write to ElasticSearch
+                Log.Information(content);
 
                 _channel.BasicAck(ea.DeliveryTag, false);
             };

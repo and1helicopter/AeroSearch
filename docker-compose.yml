@@ -14,8 +14,8 @@ services:
             POSTGRES_DB: AeroDB
         ports: 
             - 5432:5432
-        # networks:
-        #     - net_logger
+        networks:
+            - backend
 
     redis:
         image: redis:alpine3.12
@@ -24,8 +24,8 @@ services:
         # environment: 
         ports:
             - 6379:6379
-        # networks:
-        #     - net_logger
+        networks:
+            - backend
 
     rabbitmq:
         image: rabbitmq:3.8.9-management-alpine
@@ -48,8 +48,8 @@ services:
         ports:
             - 5672:5672
             - 15672:15672
-        # networks:
-        #     - net_logger  
+        networks:
+            - backend  
 
     elasticsearch: 
         image: elasticsearch:7.9.3
@@ -70,8 +70,8 @@ services:
             # - /home/and1helicopter/program/project/docker/volumes/DataElastic:/usr/share/elasticsearch/data
         ports:
             - 9200:9200
-        # networks:
-        #     - net_logger
+        networks:
+            - backend
 
     kibana:
         image: kibana:7.9.3
@@ -82,14 +82,14 @@ services:
             - 5601:5601
         depends_on: 
             - elasticsearch
-        # networks:
-        #     - net_logger
+        networks:
+            - backend
 
 #win
 volumes: 
     data_elastic:
         driver: local
 
-# networks: 
-#     net_logger:
-#         driver: bridge
+networks: 
+    backend:
+        driver: bridge

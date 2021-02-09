@@ -12,6 +12,7 @@
     <WebStackScaffolding_DbContextTypeFullName>webREST.Models.WebAppContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <ActiveDebugProfile>webREST</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>registry.hub.docker.com_and1helicopter</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
