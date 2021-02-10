@@ -6,7 +6,7 @@ services:
         container_name: postgres_container
         volumes:
             #win
-            - C:\Docker\Volumes\PostgresDB:/var/lib/postgresql/data 
+            - c:\docker\volumes\postgresdb:/var/lib/postgresql/data 
             #- /home/and1helicopter/program/project/docker/volumes/PostgresDB:/var/lib/postgresql/data
         environment: 
             POSTGRES_USER: user
@@ -66,7 +66,7 @@ services:
                 hard: 65536
         volumes: 
             #win
-            - C:\Docker\Volumes\ElasticSearch\Data:/usr/share/elasticsearch/data
+            - c:\docker\volumes\elasticsearch\data:/usr/share/elasticsearch/data
             # - /home/and1helicopter/program/project/docker/volumes/DataElastic:/usr/share/elasticsearch/data
         ports:
             - 9200:9200
