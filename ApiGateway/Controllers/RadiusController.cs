@@ -39,7 +39,7 @@ namespace AeroSearchREST.Controllers
         [ProducesResponseType(typeof(RadiusResult<RadiusItem>), 200)]
         [ProducesResponseType(typeof(RadiusResult<object>), 400)]
         [ProducesResponseType(typeof(RadiusResult<object>), 404)]
-        [HttpPost("City")]
+        [HttpGet("City")]
         public JsonResult GetCitiesByRadius(string cityCode, int radius)
         {
             var result = new RadiusResult<RadiusItem>();
@@ -97,7 +97,7 @@ namespace AeroSearchREST.Controllers
         [ProducesResponseType(typeof(RadiusResult<RadiusItem>) , 200)]
         [ProducesResponseType(typeof(RadiusResult<object>) , 400)]
         [ProducesResponseType(typeof(RadiusResult<object>) , 404)]
-        [HttpPost("Airoport")]
+        [HttpGet("Airoport")]
         public JsonResult GetAiroportsByRadius(string airoportCode, int radius)
         {
             var result = new RadiusResult<RadiusItem>();
@@ -155,7 +155,7 @@ namespace AeroSearchREST.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPost("")]
+        [HttpGet("")]
         public JsonResult GetArrayAiroportsByRadius(string code, double radius)
         {
             var result = new RadiusResult<RadiusItem>();
