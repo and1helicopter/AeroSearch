@@ -20,79 +20,72 @@ namespace AeroSearchREST.Controllers
             _memoryCache = memoryCache;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchParams"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<JsonResult> Get([FromQuery]SearchParam searchParam)
+        public async Task<JsonResult> GetOffers([FromBody] SearchParam[] searchParams)
         {
-            searchParam.segments = new SearchParam_Segment[]
+            var result = new List<List<SearchAeroRS>>(searchParams.Length);
+
+            await foreach (var offer in GetOffer(searchParams))
             {
-                new SearchParam_Segment()
-                {
-                    date = "2020-12-12",
-                    destination = "MOW",
-                    origin = "LED"
-                }
-            };
-
-            var client = new RestClient("https://www.aviasales.com/adaptors/chains/rt_search_native_format");
-            var request = new RestRequest(Method.POST);           
-            request.AddHeader("Content-type", "application/json");
-            request.AddJsonBody(
-                new
-                {
-                    know_english = true,
-                    currency = "rub",
-                    passengers = new
-                    {
-                        searchParam.adults,
-                        searchParam.children,
-                        searchParam.infants
-                    },
-                    searchParam.segments
-                });
-
-            IRestResponse response = client.Execute(request);
-
-            var search_id = JsonConvert.DeserializeObject<SearchResponse>(response.Content).search_id;
-
-            var client2 = new RestClient($"https://www.aviasales.com/searches_results_united?uuid={search_id}");
-            var request2 = new RestRequest(Method.GET);
-
-            var list = new List<SearchAeroRS>();
-
-            for (int i = 0; i < 10; i++)
-            {
-                var response2 = await client2.ExecuteTaskAsync(request2);
-
-                var listTemp = JsonConvert.DeserializeObject<List<SearchAeroRS>>(response2.Content);
-
-                foreach (var item in listTemp)
-                {
-                    if (item != null) list.Add(item);
-                }
+                result.Add(offer);
             }
 
-            return Json(list);
+            return Json(result);
         }
 
-        //[HttpGet("tests")]
-        //public async Task<ActionResult> Tests([FromQuery]SearchParam searchParam)
-        //{
-        //    var city = _memoryCache.Cache.
-        //        _context.City.FirstOrDefault(_city => _city.Code == searchParam.segments[0].origin);
+        [NonAction]
+        public async IAsyncEnumerable<List<SearchAeroRS>> GetOffer(SearchParam[] searchParams)
+        {
+            foreach (var searchParam in searchParams)
+            {
+                var result = new List<SearchAeroRS>();
 
-        //    var airports = await _context.Airport.Where(_airport => _airport.CityCode == city.Code).ToListAsync();
+                var client = new RestClient("https://www.aviasales.com/adaptors/chains/rt_search_native_format");
+                var request = new RestRequest(Method.POST);
+                request.AddHeader("Content-type", "application/json");
+                request.AddJsonBody(
+                    new
+                    {
+                        know_english = true,
+                        currency = "rub",
+                        passengers = new
+                        {
+                            searchParam.adults,
+                            searchParam.children,
+                            searchParam.infants
+                        },
+                        searchParam.segments
+                    });
 
-        //    foreach (var airport in airports)
-        //    {
-        //        var temp = _memoryCache.Cache.GeoRadius(airport.Code, airport.Longitude, airport.Latitude, 350, GeoUnit.Kilometers).ToList();
+                IRestResponse response = await client.ExecuteTaskAsync(request);
 
-        //    }
+                var search_id = JsonConvert.DeserializeObject<SearchResponse>(response.Content).search_id;
 
-        //    //var geo = new GeoCoordinate(origin.Latitude, origin.Longitude);
+                var client2 = new RestClient($"https://www.aviasales.com/searches_results_united?uuid={search_id}");
+                var request2 = new RestRequest(Method.GET);
 
-        //    //var list = cities.Where(_city => IsInsideRadius(geo, new GeoCoordinate(_city.Latitude, _city.Longitude), 350 * 1000)).ToList();
-        //    return new JsonResult("");
-        //}
+                for (int i = 0; i < 3; i++)
+                {
+                    var response2 = await client2.ExecuteTaskAsync(request2);
+
+                    var listTemp = JsonConvert.DeserializeObject<List<SearchAeroRS>>(response2.Content);
+
+                    foreach (var item in listTemp)
+                    {
+                        if (item != null) result.Add(item);
+                    }
+                }
+
+                yield return result;
+            }
+
+            yield break;
+        }
 
         private class SearchResponse
         {

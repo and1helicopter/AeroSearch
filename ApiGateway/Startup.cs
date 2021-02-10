@@ -42,7 +42,9 @@ namespace AeroSearchREST
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:9001").AllowAnyHeader().AllowAnyMethod();
+                        //builder.WithOrigins("http://localhost:9001").AllowAnyHeader().AllowAnyMethod();
+                        builder.AllowAnyOrigin();
+
                     });
             });
 

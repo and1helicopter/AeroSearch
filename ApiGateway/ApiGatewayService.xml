@@ -67,6 +67,13 @@
             <response code="400"></response>  
             <response code="404"></response> 
         </member>
+        <member name="M:AeroSearchREST.Controllers.SearchController.GetOffers(AeroSearchREST.Controllers.SearchParam[])">
+            <summary>
+            
+            </summary>
+            <param name="searchParams"></param>
+            <returns></returns>
+        </member>
         <member name="T:AeroSearchREST.Models.Data.RadiusResult`1">
             <summary>
             result of request radius

@@ -58,13 +58,20 @@ namespace AeroSearchREST
             };
 
             Log.Logger = new LoggerConfiguration()
+#if DEBUG
+                .MinimumLevel.Information()
+#else
                 .MinimumLevel.Warning()
+#endif
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .Enrich.WithMachineName()
                 .Enrich.WithProperty("Environment", environment)
                 .WriteTo.Console()
                 .WriteTo.RabbitMQ(config, sinkConfiguration)
+#if DEBUG
+                .WriteTo.Seq("http://localhost:5341")
+#endif
                 .CreateLogger();
 
             try
