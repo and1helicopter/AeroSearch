@@ -19,6 +19,7 @@ namespace LoggerService
                 .AddJsonFile($"appsettings.{environment}.json", true, true)
                 .Build();
 
+            //TODO: переделать на нормальное подключение к Elastic. Оставить только логи ошибок 
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["Elastic:Uri"])) 
@@ -45,6 +46,7 @@ namespace LoggerService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel();
                 })
                 .ConfigureAppConfiguration(configuration => 
                 {

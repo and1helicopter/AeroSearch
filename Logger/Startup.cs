@@ -23,6 +23,7 @@ namespace LoggerService
         {
             services.AddControllers();
             services.AddOptions();
+            services.AddSingleton<StatisticService>();
             services.Configure<RabbitMqConfiguration>(Configuration.GetSection("RabbitMq"));
             services.AddHostedService<RabbitMqService>();
         }
