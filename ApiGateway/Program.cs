@@ -38,19 +38,6 @@ namespace AeroSearchREST
             var hostname = rabbitMqOptions.GetSection("HostName").Value;
             var queue = rabbitMqOptions.GetSection("QueueName").Value;
 
-            //TODO: тут это не нужно
-            //Declare RabbitMq ConnectionFactory
-            var factory = new ConnectionFactory() { HostName = hostname, Port = config.Port, UserName = config.Username, Password = config.Password };
-            using (var connection = factory.CreateConnection())
-            {
-                using (var channel = connection.CreateModel())
-                {
-                    channel.ExchangeDeclare(exchange: config.Exchange, type: config.ExchangeType);
-                    channel.QueueDeclare(queue: queue, durable: false, exclusive: false, autoDelete: false, arguments: null);
-                    channel.QueueBind(queue: queue, exchange: config.Exchange, routingKey: config.RouteKey);
-                }
-            }
-
             config.Hostnames.Add(hostname);
             var sinkConfiguration = new RabbitMQSinkConfiguration()
             {

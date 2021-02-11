@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>webREST</ActiveDebugProfile>
+    <ActiveDebugProfile>AptGateway</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
