@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiGatewayService</name>
+    </assembly>
+    <members>
+        <member name="M:AeroSearchREST.Common.Extantions.IsNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Indicates whether the specified enumerable is null or an empty.
+            </summary>
+            <typeparam name="T">class</typeparam>
+            <param name="obj"></param>
+            <returns>true if the value parameter is null or an empty; otherwise, false.</returns>
+        </member>
+        <member name="T:AeroSearchREST.Controllers.InitializeController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AeroSearchREST.Controllers.InitializeController.GetAirports">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AeroSearchREST.Controllers.RadiusController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AeroSearchREST.Controllers.RadiusController.#ctor(AeroSearchREST.IRedisCacheService)">
+            <summary>
+            Initilize Radius Controller
+            </summary>
+            <param name="memoryCache">redis cache param</param>
+        </member>
+        <member name="M:AeroSearchREST.Controllers.RadiusController.GetCitiesByRadius(System.String,System.Int32)">
+            <summary>
+            Method will return array cities codes within the radius of the city code (Search only from cities).
+            </summary>
+            <param name="cityCode">code of the city</param>
+            <param name="radius">searching radius</param>
+            <returns>array city codes</returns>
+            <response code="200">200 OK</response>  
+            <response code="400">400 Bad Request</response>  
+            <response code="404">404 Not Found</response> 
+        </member>
+        <member name="M:AeroSearchREST.Controllers.RadiusController.GetAiroportsByRadius(System.String,System.Int32)">
+            <summary>
+            Method will return array airport codes within the radius of the airport code (Search only from airports). 
+            </summary>
+            <param name="airoportCode">code of the airport</param>
+            <param name="radius">searching radius</param>
+            <returns>array airport codes</returns>
+            <response code="200">200 OK</response>  
+            <response code="400">400 Bad Request</response>  
+            <response code="404">404 Not Found</response> 
+        </member>
+        <member name="M:AeroSearchREST.Controllers.RadiusController.GetArrayAiroportsByRadius(System.String,System.Double)">
+            <summary>
+            Method will return array airport codes within the radius of the airport code or the city code. 
+            </summary>
+            <param name="code">code of the airport or the city</param>
+            <param name="radius">searching radius</param>
+            <returns>array airport codes</returns>
+            <response code="200"></response>  
+            <response code="400"></response>  
+            <response code="404"></response> 
+        </member>
+        <member name="M:AeroSearchREST.Controllers.SearchController.GetOffers(AeroSearchREST.Controllers.SearchParam[])">
+            <summary>
+            
+            </summary>
+            <param name="searchParams"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AeroSearchREST.Models.Data.RadiusResult`1">
+            <summary>
+            result of request radius
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusResult`1.Status">
+            <summary>
+            status of result 
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusResult`1.Text">
+            <summary>
+            description of result
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusResult`1.Result">
+            <summary>
+            result
+            </summary>
+        </member>
+        <member name="T:AeroSearchREST.Models.Data.RadiusItem">
+            <summary>
+            Information about airport within the radius
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItem.Code">
+            <summary>
+            Code of airport
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItem.Name">
+            <summary>
+            Name of airport
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItem.Position">
+            <summary>
+            Coordinate of airport
+            </summary>
+        </member>
+        <member name="T:AeroSearchREST.Models.Data.RadiusItemPosition">
+            <summary>
+            Coordinate of airport
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemPosition.Latitude">
+            <summary>
+            Latitude
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemPosition.Longitude">
+            <summary>
+            Longitude
+            </summary>
+        </member>
+        <member name="T:AeroSearchREST.Models.Data.RadiusItemName">
+            <summary>
+            Name of airport
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.Rus">
+            <summary>
+            Name of airport by russian
+            </summary>
+        </member>
+        <member name="P:AeroSearchREST.Models.Data.RadiusItemName.Eng">
+            <summary>
+            Name of airport by english
+            </summary>
+        </member>
+    </members>
+</doc>

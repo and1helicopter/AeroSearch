@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["AeroSearchREST/AeroSearchREST.csproj", "AeroSearchREST/"]
-RUN dotnet restore "AeroSearchREST/AeroSearchREST.csproj"
+COPY "AeroSearchREST.csproj" "AeroSearchREST.csproj"
+RUN dotnet restore "AeroSearchREST.csproj"
 COPY . .
-WORKDIR "/src/AeroSearchREST"
+WORKDIR "/src"
 RUN dotnet build "AeroSearchREST.csproj" -c Release -o /app/build
 
 FROM build AS publish
