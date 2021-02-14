@@ -1,5 +1,6 @@
 ﻿namespace LoggerService.Services
 {
+    //TODO: нужно больше информации по сервису
     public class StatisticService : IStatisticService
     {
         private ulong messageCount;

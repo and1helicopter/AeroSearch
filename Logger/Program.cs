@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Exceptions;
-using Serilog.Sinks.Elasticsearch;
 
 namespace LoggerService
 {
@@ -21,12 +19,17 @@ namespace LoggerService
 
             //TODO: переделать на нормальное подключение к Elastic. Оставить только логи ошибок 
             Log.Logger = new LoggerConfiguration()
+#if DEBUG
+                .MinimumLevel.Information()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["Elastic:Uri"])) 
-                { 
-                    AutoRegisterTemplate = true,
-                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".","-")}-{environment?.ToLower().Replace(".","-")}-{DateTime.UtcNow:dd-MM-yyyy}"
-                })
+#else
+                .MinimumLevel.Warning()
+                //.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["Elastic:Uri"])) 
+                //{ 
+                //    AutoRegisterTemplate = true,
+                //    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".","-")}-{environment?.ToLower().Replace(".","-")}-{DateTime.UtcNow:dd-MM-yyyy}"
+                //})
+#endif
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
